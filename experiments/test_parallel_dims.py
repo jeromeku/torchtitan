@@ -20,7 +20,7 @@ def main():
             f"--parallelism.data_parallel_shard_degree={DP_SHARD}",
         ]
     )
-    print(config)
+    # print(config)
 
     parallelism_config = config.parallelism
 
@@ -33,9 +33,16 @@ def main():
         ep=parallelism_config.expert_parallel_degree,
         world_size=WORLD_SIZE,
     )
-    print(parallel_dims)
-
-
+    mesh = parallel_dims.build_mesh()
+    print(f"{mesh._dim_group_names=}")
+    print(f"{mesh.mesh_dim_names=}")
+    non_moe_dp_mesh_dim_names = ("dp_shard_cp",)
+    ep_dp_mesh_dim_names = ("dp_shard_mod_ep", )
+    non_moe_dp_mesh = mesh[non_moe_dp_mesh_dim_names]
+    ep_dp_mesh = mesh[ep_dp_mesh_dim_names]
+    print(f"{non_moe_dp_mesh_dim_names}: {non_moe_dp_mesh}")
+    print(f"{ep_dp_mesh_dim_names}: {ep_dp_mesh}")
+    
 if __name__ == "__main__":
     init_fake_distributed(WORLD_SIZE)
     main()

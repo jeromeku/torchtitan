@@ -25,6 +25,7 @@ class ParallelDims:
     pp: int
     ep: int
     world_size: int
+    device_type: str = None
 
     _world_mesh: DeviceMesh = None
 
@@ -93,7 +94,8 @@ class ParallelDims:
                 names.append(name)
 
         logger.info(f"Building {len(dims)}-D device mesh with {names}, {dims}")
-        mesh = init_device_mesh(device_type, dims, mesh_dim_names=names)
+        _device_type = self.device_type or device_type
+        mesh = init_device_mesh(_device_type, dims, mesh_dim_names=names)
 
         # Create all the submesh here to ensure all required process groups are
         # initialized:
