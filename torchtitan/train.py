@@ -82,7 +82,7 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         self.device = torch.device(f"{device_type}:{int(os.environ['LOCAL_RANK'])}")
         # Device has to be set before creating TorchFT manager.
         device_module.set_device(self.device)
-
+        breakpoint()
         # init distributed and build meshes
         dist_utils.init_distributed(job_config)
         world_size = int(os.environ["WORLD_SIZE"])
@@ -140,6 +140,7 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         )
 
         # build model (using meta init)
+        breakpoint()
         model_args = self.train_spec.model_args[job_config.model.flavor]
         # set the model args from training job configs
         model_args.update_from_config(job_config, tokenizer)

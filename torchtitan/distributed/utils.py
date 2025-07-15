@@ -226,6 +226,14 @@ def maybe_enable_amp(
                 dtype=TORCH_DTYPE_MAP[mixed_precision_param],
             )
 
+def init_fake_distributed(world_size: int = 1):
+    from torch.testing._internal.distributed.fake_pg import FakeStore
+
+    store = FakeStore()
+    dist.init_process_group(
+        backend="fake", rank=0, world_size=world_size, store=store
+    )
+
 
 def init_distributed(job_config):
     def _warn_overwrite_env(env, val):

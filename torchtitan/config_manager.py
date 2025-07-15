@@ -371,7 +371,10 @@ class Parallelism:
     Note that this is still an experimental feature.
     """
 
-
+    world_size: int = 1
+    """
+    For debugging, use with FakePG
+    """
 @dataclass
 class Checkpoint:
     enable_checkpoint: bool = False
