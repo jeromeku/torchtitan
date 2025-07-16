@@ -177,7 +177,7 @@ def estimate_memory(job_config: JobConfig):
                 gc.collect(1)
 
         fsdp_memtracker.display_modulewise_snapshots(
-            depth=3, units="MiB", tabulate=True
+            depth=5, units="MiB", tabulate=True
         )
         # mem_stats = torch.cuda.memory_stats()
         # peak_active = mem_stats["active_bytes.all.peak"]

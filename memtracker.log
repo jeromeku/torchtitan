@@ -61,13 +61,13 @@ JobConfig(
     experimental=Experimental(custom_import='', custom_args_module=''),
     validation=Validation(enabled=False, dataset='c4_validation', dataset_path=None, local_batch_size=8, seq_len=2048, freq=5, steps=10)
 )
-[titan] 2025-07-16 13:55:03,437 - root - INFO - Estimating memory usage...
-[titan] 2025-07-16 13:55:03,437 - root - INFO - Building 1-D device mesh with ['dp_shard'], [8]
-[titan] 2025-07-16 13:55:03,681 - root - INFO - Loading tokenizer from tokenizer.json
-[titan] 2025-07-16 13:55:03,685 - root - INFO - Building llama3 debugmodel with TransformerModelArgs(_enforced='This field is used to enforce all fields have defaults.', dim=256, n_layers=3, n_heads=16, n_kv_heads=None, vocab_size=2000, multiple_of=256, ffn_dim_multiplier=None, norm_eps=1e-05, rope_theta=500000, max_seq_len=2048, depth_init=True, use_flex_attn=False, attn_mask_type='causal', eos_id=1999)
-[titan] 2025-07-16 13:55:03,724 - root - INFO - Applied selective activation checkpointing to the model
-[titan] 2025-07-16 13:55:03,783 - root - INFO - Applied FSDP to the model
-[titan] 2025-07-16 13:55:03,810 - root - INFO - Vocab size: 2000
+[titan] 2025-07-16 14:07:33,741 - root - INFO - Estimating memory usage...
+[titan] 2025-07-16 14:07:33,741 - root - INFO - Building 1-D device mesh with ['dp_shard'], [8]
+[titan] 2025-07-16 14:07:33,982 - root - INFO - Loading tokenizer from tokenizer.json
+[titan] 2025-07-16 14:07:33,986 - root - INFO - Building llama3 debugmodel with TransformerModelArgs(_enforced='This field is used to enforce all fields have defaults.', dim=256, n_layers=3, n_heads=16, n_kv_heads=None, vocab_size=2000, multiple_of=256, ffn_dim_multiplier=None, norm_eps=1e-05, rope_theta=500000, max_seq_len=2048, depth_init=True, use_flex_attn=False, attn_mask_type='causal', eos_id=1999)
+[titan] 2025-07-16 14:07:34,022 - root - INFO - Applied selective activation checkpointing to the model
+[titan] 2025-07-16 14:07:34,082 - root - INFO - Applied FSDP to the model
+[titan] 2025-07-16 14:07:34,109 - root - INFO - Vocab size: 2000
 DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([1024256]) 2048512
 DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
 DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
