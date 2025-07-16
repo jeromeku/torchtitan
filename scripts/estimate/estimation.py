@@ -9,6 +9,7 @@ import gc
 import os
 
 import torch
+from torch.distributed.tensor.debug import CommDebugMode
 
 from torch._guards import active_fake_mode
 from torch._subclasses.fake_tensor import FakeTensorMode
@@ -46,6 +47,8 @@ def estimate_memory(job_config: JobConfig):
     )
 
     parallelism_config = job_config.parallelism
+
+    
     parallel_dims = ParallelDims(
         dp_shard=parallelism_config.data_parallel_shard_degree,
         dp_replicate=parallelism_config.data_parallel_replicate_degree,
@@ -79,7 +82,7 @@ def estimate_memory(job_config: JobConfig):
 
     # build tokenizer
     tokenizer = train_spec.build_tokenizer_fn(job_config)
-
+    
     loss_parallel_enabled = (
         parallel_dims.tp_enabled and not parallelism_config.disable_loss_parallel
     )
@@ -91,12 +94,13 @@ def estimate_memory(job_config: JobConfig):
     # build model (using meta init)
     model_args = train_spec.model_args[job_config.model.flavor]
     model_args.update_from_config(job_config, tokenizer)
-
+    
     with (
         FakeTensorMode()
         if not job_config.memory_estimation.disable_fake_mode
         else contextlib.nullcontext()
     ):
+    # with FakeTensorMode():
         logger.info(
             f"Building {train_spec.name} {job_config.model.flavor} with {model_args}"
         )
@@ -144,9 +148,10 @@ def estimate_memory(job_config: JobConfig):
         )
         fsdp_memtracker = FSDPMemTracker(mod=model, optm=optimizers.optimizers[0])
         fsdp_memtracker.track_inputs(batch)
-
+        # comms = CommDebugMode()
+        comms = contextlib.nullcontext()
         loss_fn = train_spec.build_loss_fn(job_config)
-        with fsdp_memtracker:
+        with comms, fsdp_memtracker:
             for iter_idx in range(2):
                 input_ids, labels = batch
                 # train step
@@ -174,26 +179,35 @@ def estimate_memory(job_config: JobConfig):
         fsdp_memtracker.display_modulewise_snapshots(
             depth=3, units="MiB", tabulate=True
         )
-        mem_stats = torch.cuda.memory_stats()
-        peak_active = mem_stats["active_bytes.all.peak"]
-        peak_reserved = mem_stats["reserved_bytes.all.peak"]
-        num_retries = mem_stats["num_alloc_retries"]
-        dev = torch.device(torch.cuda.current_device())
-        tracker_peak = fsdp_memtracker.get_tracker_snapshot("peak")[dev]["Total"]
-        gib = 1024**3
-        print(
-            f"peak active: {peak_active / gib} GiB | peak reserved:"
-            f" {peak_reserved / gib} GiB | num_retries: {num_retries}"
-        )
-        print(f"Tracker Max: {tracker_peak / gib} GiB")
-        if job_config.memory_estimation.disable_fake_mode and peak_active > 0:
-            print(f"Tracker Accuracy: {tracker_peak / peak_active}")
+        # mem_stats = torch.cuda.memory_stats()
+        # peak_active = mem_stats["active_bytes.all.peak"]
+        # peak_reserved = mem_stats["reserved_bytes.all.peak"]
+        # num_retries = mem_stats["num_alloc_retries"]
+        # dev = torch.device(torch.cuda.current_device())
+        # tracker_peak = fsdp_memtracker.get_tracker_snapshot("peak")[dev]["Total"]
+        # gib = 1024**3
+        # print(
+        #     f"peak active: {peak_active / gib} GiB | peak reserved:"
+        #     f" {peak_reserved / gib} GiB | num_retries: {num_retries}"
+        # )
+        # print(f"Tracker Max: {tracker_peak / gib} GiB")
+        # if job_config.memory_estimation.disable_fake_mode and peak_active > 0:
+        #     print(f"Tracker Accuracy: {tracker_peak / peak_active}")
+        # comms_counts = comms.get_comm_counts()
+        # print(f"{comms_counts=}")
+        # print(comms.generate_comm_debug_tracing_table(1))
+        # comms.log_comm_debug_tracing_table_to_file()
+
         gc.enable()
 
 
 if __name__ == "__main__":
+    from rich import print as rprint
+    from rich.pretty import Pretty
+
     config_manager = ConfigManager()
     config = config_manager.parse_args()
+    rprint(Pretty(config))
     try:
         estimate_memory(config)
     finally:

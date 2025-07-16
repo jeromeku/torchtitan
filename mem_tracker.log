@@ -1,0 +1,1115 @@
++ NGPU=8
++ NNODES=1
++ CONFIG_FILE=./torchtitan/models/llama3/train_configs/llama3_8b.toml
++ overrides=
++ '[' 0 -ne 0 ']'
++ export WORLD_SIZE=8
++ WORLD_SIZE=8
++ export LOCAL_RANK=0
++ LOCAL_RANK=0
++ python -m scripts.estimate.estimation --job.config_file ./torchtitan/models/llama3/train_configs/llama3_8b.toml --memory_estimation.enabled
+[titan] 2025-07-16 12:09:00,514 - root - INFO - Estimating memory usage...
+[titan] 2025-07-16 12:09:00,515 - root - INFO - Building 1-D device mesh with ['dp_shard'], [8]
+[titan] 2025-07-16 12:09:00,756 - root - INFO - Loading tokenizer from tokenizer.json
+[titan] 2025-07-16 12:09:01,069 - root - INFO - Building llama3 8B with TransformerModelArgs(_enforced='This field is used to enforce all fields have defaults.', dim=4096, n_layers=32, n_heads=32, n_kv_heads=8, vocab_size=128256, multiple_of=1024, ffn_dim_multiplier=1.3, norm_eps=1e-05, rope_theta=500000, max_seq_len=8192, depth_init=True, use_flex_attn=False, attn_mask_type='causal', eos_id=128001)
+[titan] 2025-07-16 12:09:01,229 - root - INFO - Applied selective activation checkpointing to the model
+[titan] 2025-07-16 12:09:01,686 - root - INFO - Applied FSDP to the model
+[titan] 2025-07-16 12:09:01,877 - root - INFO - Vocab size: 128256
+[3] > [33;01m/home/jeromeku/torchtitan/scripts/estimate/estimation.py[00m([36;01m148[00m)estimate_memory()
+-> loss_fn [38;5;241m=[39m train_spec[38;5;241m.[39mbuild_loss_fn(job_config)
+(Pdb++) torch.float32
+(Pdb++) FSDPTransformer(
+  (tok_embeddings): Embedding(128256, 4096)
+  (layers): ModuleDict(
+    (0): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (1): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (2): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (3): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (4): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (5): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (6): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (7): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (8): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (9): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (10): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (11): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (12): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (13): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (14): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (15): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (16): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (17): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (18): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (19): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (20): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (21): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (22): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (23): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (24): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (25): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (26): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (27): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (28): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (29): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (30): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (31): FSDPCheckpointWrapper(
+      (_checkpoint_wrapped_module): TransformerBlock(
+        (attention): Attention(
+          (wq): Linear(in_features=4096, out_features=4096, bias=False)
+          (wk): Linear(in_features=4096, out_features=1024, bias=False)
+          (wv): Linear(in_features=4096, out_features=1024, bias=False)
+          (wo): Linear(in_features=4096, out_features=4096, bias=False)
+          (sdpa): ScaledDotProductAttention()
+        )
+        (feed_forward): FeedForward(
+          (w1): Linear(in_features=4096, out_features=14336, bias=False)
+          (w2): Linear(in_features=14336, out_features=4096, bias=False)
+          (w3): Linear(in_features=4096, out_features=14336, bias=False)
+        )
+        (attention_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (ffn_norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+  )
+  (norm): RMSNorm((4096,), eps=1e-05, elementwise_affine=True)
+  (output): Linear(in_features=4096, out_features=128256, bias=False)
+)
+(Pdb++) (Pdb++) 291
+(Pdb++) 291
+(Pdb++) (Pdb++) 291
+(Pdb++) Peak Memory at iter: 0
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp        All Gather    Reduce Scatter    OptState    Inputs    Total
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+cuda:0    3829.13 MiB      416.02 MiB         4.0 MiB   0.0 MiB         0.0 MiB           20232.06 MiB  8016.0 MiB  0.0 MiB       0.0 MiB           0.0 MiB     0.12 MiB  32497.33 MiB
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Peak Memory at iter: 1
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp        All Gather    Reduce Scatter    OptState    Inputs    Total
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+cuda:0    3829.13 MiB      416.02 MiB         4.0 MiB   0.0 MiB         0.0 MiB           20232.06 MiB  8016.0 MiB  0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  40155.73 MiB
+========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp        All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           18228.06 MiB  0.0 MiB     416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  32555.75 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      0.0 MiB            4.0 MiB   0.0 MiB         0.0 MiB           0.0 MiB       0.0 MiB     0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  11491.65 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           0.0 MiB       0.0 MiB     2004.01 MiB   0.0 MiB           7658.4 MiB  0.12 MiB  15499.66 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           18228.06 MiB  0.0 MiB     416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  32555.75 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      416.02 MiB         4.0 MiB   0.0 MiB         0.0 MiB           18228.06 MiB  0.0 MiB     0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  30135.73 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           16224.06 MiB  2004.0 MiB  2004.01 MiB   0.0 MiB           7658.4 MiB  0.12 MiB  34143.74 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      416.02 MiB         4.0 MiB   0.0 MiB         0.0 MiB           16224.06 MiB  2004.0 MiB  0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  30135.73 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           16224.06 MiB  2004.0 MiB  0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  32139.73 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3328.12 MiB     2004.01 MiB       0.0 MiB       0.0 MiB     0.0 MiB       832.03 MiB        7658.4 MiB  0.12 MiB  19659.82 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      0.0 MiB            4.0 MiB   3829.13 MiB     1002.0 MiB        0.0 MiB       0.0 MiB     0.0 MiB       4008.02 MiB       7658.4 MiB  0.12 MiB  20330.79 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.0
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           64.0 MiB      0.0 MiB      2420.02 MiB   0.0 MiB           7658.4 MiB  0.12 MiB  16395.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           64.0 MiB      0.0 MiB      2004.01 MiB   0.0 MiB           7658.4 MiB  0.12 MiB  15563.66 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           64.0 MiB      0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14391.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           561.0 MiB     0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14888.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           561.0 MiB     0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14472.67 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3224.12 MiB     0.0 MiB           417.0 MiB     3130.07 MiB  0.0 MiB       832.03 MiB        7658.4 MiB  0.12 MiB  21514.9 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3224.12 MiB     0.0 MiB           497.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  19530.83 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3224.12 MiB     0.0 MiB           497.0 MiB     1066.01 MiB  0.0 MiB       832.03 MiB        7658.4 MiB  0.12 MiB  19530.83 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3224.12 MiB     416.02 MiB        0.0 MiB       1066.01 MiB  0.0 MiB       832.03 MiB        7658.4 MiB  0.12 MiB  19449.85 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3328.12 MiB     0.01 MiB          0.0 MiB       1066.01 MiB  0.0 MiB       832.03 MiB        7658.4 MiB  0.12 MiB  18721.83 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.1
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1730.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16057.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           561.0 MiB     0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14472.67 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           561.0 MiB     0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14888.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1058.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15385.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1058.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14969.67 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3120.12 MiB     0.0 MiB           914.0 MiB     3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22323.91 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3120.12 MiB     0.0 MiB           994.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  19923.83 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3120.12 MiB     0.0 MiB           994.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20339.85 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3120.12 MiB     416.02 MiB        497.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20258.86 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3224.12 MiB     0.01 MiB          497.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  19530.84 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.2
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2227.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16554.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1058.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  14969.67 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1058.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15385.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1555.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15882.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1555.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15466.67 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3016.11 MiB     0.0 MiB           1411.0 MiB    3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22716.91 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3016.11 MiB     0.0 MiB           1491.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20316.83 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3016.11 MiB     0.0 MiB           1491.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20732.84 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   3016.11 MiB     416.02 MiB        994.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20651.86 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3120.12 MiB     0.01 MiB          994.0 MiB     1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  19923.84 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.3
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2724.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17051.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1555.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15466.67 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           1555.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15882.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2052.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16379.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2052.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15963.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2912.11 MiB     0.0 MiB           1908.0 MiB    3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23109.9 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2912.11 MiB     0.0 MiB           1988.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20709.82 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2912.11 MiB     0.0 MiB           1988.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21125.84 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2912.11 MiB     416.02 MiB        1491.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21044.85 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   3016.11 MiB     0.01 MiB          1491.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20316.84 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.4
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3221.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17548.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2052.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  15963.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2052.0 MiB    0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16379.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2549.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16876.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2549.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16460.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2808.11 MiB     0.0 MiB           2405.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23502.9 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2808.11 MiB     0.0 MiB           2485.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21102.82 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2808.11 MiB     0.0 MiB           2485.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21518.84 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2808.11 MiB     416.02 MiB        1988.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21437.85 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2912.11 MiB     0.01 MiB          1988.0 MiB    1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  20709.83 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.5
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3718.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18045.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2549.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16460.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           2549.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16876.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3046.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17373.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3046.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16957.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2704.1 MiB      0.0 MiB           2902.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23895.9 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2704.1 MiB      0.0 MiB           2982.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21495.82 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2704.1 MiB      0.0 MiB           2982.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21911.83 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2704.1 MiB      416.02 MiB        2485.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21830.85 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2808.11 MiB     0.01 MiB          2485.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21102.83 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.6
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4215.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18542.69 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3046.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  16957.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3046.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17373.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3543.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17870.69 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3543.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17454.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2600.1 MiB      0.0 MiB           3399.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24288.89 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2600.1 MiB      0.0 MiB           3479.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21888.82 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2600.1 MiB      0.0 MiB           3479.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22304.83 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2600.1 MiB      416.02 MiB        2982.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22223.85 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2704.1 MiB      0.01 MiB          2982.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21495.83 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.7
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4712.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19039.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3543.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17454.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           3543.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17870.69 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4040.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18367.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4040.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17951.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2496.09 MiB     0.0 MiB           3896.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24681.89 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2496.09 MiB     0.0 MiB           3976.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22281.81 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2496.09 MiB     0.0 MiB           3976.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22697.83 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2496.09 MiB     416.02 MiB        3479.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22616.84 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2600.1 MiB      0.01 MiB          3479.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  21888.82 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.8
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5209.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19536.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4040.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  17951.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4040.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18367.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4537.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18864.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4537.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18448.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2392.09 MiB     0.0 MiB           4393.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25074.89 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2392.09 MiB     0.0 MiB           4473.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22674.81 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2392.09 MiB     0.0 MiB           4473.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23090.83 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2392.09 MiB     416.02 MiB        3976.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23009.84 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2496.09 MiB     0.01 MiB          3976.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22281.82 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.9
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5706.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20033.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4537.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18448.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           4537.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18864.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5034.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19361.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5034.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18945.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2288.09 MiB     0.0 MiB           4890.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25467.89 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2288.09 MiB     0.0 MiB           4970.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23067.81 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2288.09 MiB     0.0 MiB           4970.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23483.82 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2288.09 MiB     416.02 MiB        4473.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23402.84 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2392.09 MiB     0.01 MiB          4473.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  22674.82 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.10
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6203.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20530.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5034.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  18945.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5034.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19361.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5531.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19858.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5531.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19442.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2184.08 MiB     0.0 MiB           5387.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25860.88 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2184.08 MiB     0.0 MiB           5467.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23460.8 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2184.08 MiB     0.0 MiB           5467.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23876.82 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2184.08 MiB     416.02 MiB        4970.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23795.83 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2288.09 MiB     0.01 MiB          4970.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23067.81 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.11
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6700.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21027.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5531.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19442.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           5531.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19858.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6028.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20355.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6028.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19939.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2080.08 MiB     0.0 MiB           5884.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26253.88 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2080.08 MiB     0.0 MiB           5964.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23853.8 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2080.08 MiB     0.0 MiB           5964.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24269.82 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   2080.08 MiB     416.02 MiB        5467.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24188.83 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2184.08 MiB     0.01 MiB          5467.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23460.81 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.12
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7197.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21524.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6028.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  19939.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6028.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20355.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6525.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20852.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6525.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20436.68 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1976.07 MiB     0.0 MiB           6381.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26646.88 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1976.07 MiB     0.0 MiB           6461.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24246.8 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1976.07 MiB     0.0 MiB           6461.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24662.81 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1976.07 MiB     416.02 MiB        5964.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24581.83 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   2080.08 MiB     0.01 MiB          5964.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  23853.81 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.13
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7694.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22021.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6525.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20436.68 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           6525.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20852.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7022.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21349.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7022.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20933.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1872.07 MiB     0.0 MiB           6878.01 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27039.87 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1872.07 MiB     0.0 MiB           6958.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24639.8 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1872.07 MiB     0.0 MiB           6958.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25055.81 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1872.07 MiB     416.02 MiB        6461.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24974.83 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1976.07 MiB     0.01 MiB          6461.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24246.81 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.14
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8191.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22518.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7022.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  20933.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7022.01 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21349.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7519.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21846.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7519.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21430.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1768.07 MiB     0.0 MiB           7375.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27432.87 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1768.07 MiB     0.0 MiB           7455.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25032.79 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1768.07 MiB     0.0 MiB           7455.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25448.81 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1768.07 MiB     416.02 MiB        6958.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25367.82 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1872.07 MiB     0.01 MiB          6958.01 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  24639.8 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.15
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8688.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23015.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7519.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21430.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           7519.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21846.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8016.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22343.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8016.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21927.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1664.06 MiB     0.0 MiB           7872.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27825.87 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1664.06 MiB     0.0 MiB           7952.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25425.79 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1664.06 MiB     0.0 MiB           7952.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25841.81 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1664.06 MiB     416.02 MiB        7455.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25760.82 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1768.07 MiB     0.01 MiB          7455.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25032.8 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.16
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9185.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23512.7 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8016.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  21927.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8016.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22343.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8513.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22840.7 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8513.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22424.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1560.06 MiB     0.0 MiB           8369.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28218.86 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1560.06 MiB     0.0 MiB           8449.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25818.79 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1560.06 MiB     0.0 MiB           8449.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26234.8 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1560.06 MiB     416.02 MiB        7952.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26153.82 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1664.06 MiB     0.01 MiB          7952.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25425.8 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.17
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9682.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24009.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8513.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22424.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           8513.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22840.7 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9010.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23337.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9010.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22921.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1456.05 MiB     0.0 MiB           8866.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28611.86 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1456.05 MiB     0.0 MiB           8946.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26211.78 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1456.05 MiB     0.0 MiB           8946.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26627.8 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1456.05 MiB     416.02 MiB        8449.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26546.81 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1560.06 MiB     0.01 MiB          8449.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  25818.79 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.18
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10179.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24506.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9010.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  22921.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9010.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23337.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9507.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23834.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9507.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23418.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1352.05 MiB     0.0 MiB           9363.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29004.86 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1352.05 MiB     0.0 MiB           9443.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26604.78 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1352.05 MiB     0.0 MiB           9443.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27020.8 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1352.05 MiB     416.02 MiB        8946.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26939.81 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1456.05 MiB     0.01 MiB          8946.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26211.79 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.19
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10676.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25003.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9507.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23418.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           9507.02 MiB   0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23834.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10004.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24331.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10004.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23915.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1248.05 MiB     0.0 MiB           9860.02 MiB   3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29397.86 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1248.05 MiB     0.0 MiB           9940.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26997.78 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1248.05 MiB     0.0 MiB           9940.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27413.79 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1248.05 MiB     416.02 MiB        9443.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27332.81 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1352.05 MiB     0.01 MiB          9443.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26604.79 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.20
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11173.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25500.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10004.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  23915.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10004.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24331.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10501.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24828.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10501.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24412.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1144.04 MiB     0.0 MiB           10357.02 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29790.85 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1144.04 MiB     0.0 MiB           10437.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27390.77 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1144.04 MiB     0.0 MiB           10437.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27806.79 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1144.04 MiB     416.02 MiB        9940.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27725.81 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1248.05 MiB     0.01 MiB          9940.02 MiB   1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  26997.79 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.21
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11670.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25997.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10501.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24412.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10501.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24828.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10998.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25325.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10998.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24909.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1040.04 MiB     0.0 MiB           10854.02 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30183.85 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1040.04 MiB     0.0 MiB           10934.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27783.77 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1040.04 MiB     0.0 MiB           10934.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28199.79 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   1040.04 MiB     416.02 MiB        10437.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28118.8 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1144.04 MiB     0.01 MiB          10437.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27390.78 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.22
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12167.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26494.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10998.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  24909.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           10998.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25325.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11495.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25822.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11495.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25406.69 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   936.04 MiB      0.0 MiB           11351.02 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30576.85 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   936.04 MiB      0.0 MiB           11431.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28176.77 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   936.04 MiB      0.0 MiB           11431.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28592.78 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   936.04 MiB      416.02 MiB        10934.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28511.8 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   1040.04 MiB     0.01 MiB          10934.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  27783.78 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.23
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12664.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26991.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11495.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25406.69 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11495.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25822.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11992.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26319.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11992.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25903.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   832.03 MiB      0.0 MiB           11848.02 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30969.84 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   832.03 MiB      0.0 MiB           11928.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28569.77 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   832.03 MiB      0.0 MiB           11928.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28985.78 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   832.03 MiB      416.02 MiB        11431.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28904.8 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   936.04 MiB      0.01 MiB          11431.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28176.78 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.24
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13161.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27488.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11992.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  25903.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           11992.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26319.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12489.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26816.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12489.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26400.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   728.03 MiB      0.0 MiB           12345.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31362.84 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   728.03 MiB      0.0 MiB           12425.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28962.76 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   728.03 MiB      0.0 MiB           12425.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29378.78 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   728.03 MiB      416.02 MiB        11928.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29297.79 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   832.03 MiB      0.01 MiB          11928.02 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28569.77 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.25
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13658.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27985.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12489.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26400.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12489.02 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26816.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12986.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27313.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12986.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26897.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   624.02 MiB      0.0 MiB           12842.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31755.84 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   624.02 MiB      0.0 MiB           12922.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29355.76 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   624.02 MiB      0.0 MiB           12922.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29771.78 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   624.02 MiB      416.02 MiB        12425.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29690.79 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   728.03 MiB      0.01 MiB          12425.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  28962.77 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.26
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14155.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28482.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12986.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  26897.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           12986.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27313.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13483.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27810.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13483.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27394.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   520.02 MiB      0.0 MiB           13339.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  32148.84 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   520.02 MiB      0.0 MiB           13419.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29748.76 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   520.02 MiB      0.0 MiB           13419.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30164.77 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   520.02 MiB      416.02 MiB        12922.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30083.79 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   624.02 MiB      0.01 MiB          12922.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29355.77 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.27
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14652.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28979.71 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13483.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27394.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13483.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27810.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13980.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28307.71 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13980.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27891.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   416.02 MiB      0.0 MiB           13836.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  32541.83 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   416.02 MiB      0.0 MiB           13916.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30141.75 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   416.02 MiB      0.0 MiB           13916.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30557.77 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   416.02 MiB      416.02 MiB        13419.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30476.78 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   520.02 MiB      0.01 MiB          13419.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  29748.77 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.28
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15149.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29476.72 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13980.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  27891.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           13980.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28307.71 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14477.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28804.72 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14477.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28388.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   312.01 MiB      0.0 MiB           14333.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  32934.83 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   312.01 MiB      0.0 MiB           14413.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30534.75 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   312.01 MiB      0.0 MiB           14413.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30950.77 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   312.01 MiB      416.02 MiB        13916.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30869.78 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   416.02 MiB      0.01 MiB          13916.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30141.76 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.29
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15646.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29973.72 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14477.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28388.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14477.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28804.72 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14974.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29301.72 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14974.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28885.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   208.01 MiB      0.0 MiB           14830.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  33327.83 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   208.01 MiB      0.0 MiB           14910.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30927.75 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   208.01 MiB      0.0 MiB           14910.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31343.76 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   208.01 MiB      416.02 MiB        14413.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31262.78 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   312.01 MiB      0.01 MiB          14413.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30534.76 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.30
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           16143.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  30470.72 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14974.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  28885.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           14974.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29301.72 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15471.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29798.72 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15471.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29382.7 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   104.0 MiB       0.0 MiB           15327.03 MiB  3130.07 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  33720.82 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   104.0 MiB       0.0 MiB           15407.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31320.75 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   104.0 MiB       0.0 MiB           15407.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31736.76 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   104.0 MiB       416.02 MiB        14910.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31655.78 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   208.01 MiB      0.01 MiB          14910.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  30927.76 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Module:  FSDPTransformer.layers.31
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp         All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+Peak Forward # 1          cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           16640.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  30967.72 MiB
+Before Pre-Forward # 1    cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15471.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29382.7 MiB
+After Pre-Forward # 1     cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15471.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  29798.72 MiB
+Before Post-Forward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15968.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  30295.72 MiB
+After Post-Forward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15968.03 MiB  0.0 MiB      416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  30295.72 MiB
+Peak Backward # 1         cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15824.03 MiB  3130.07 MiB  416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  33281.79 MiB
+Before Pre-Backward # 1   cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15904.03 MiB  1066.01 MiB  0.0 MiB       0.0 MiB           7658.4 MiB  0.12 MiB  30881.71 MiB
+After Pre-Backward # 1    cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         0.0 MiB           15904.03 MiB  1066.01 MiB  416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  31297.73 MiB
+Before Post-Backward # 1  cuda:0    3829.13 MiB      2420.02 MiB        4.0 MiB   0.0 MiB         416.02 MiB        15407.03 MiB  1066.01 MiB  416.02 MiB    0.0 MiB           7658.4 MiB  0.12 MiB  31216.74 MiB
+After Post-Backward # 1   cuda:0    3829.13 MiB      2004.01 MiB        4.0 MiB   104.0 MiB       0.01 MiB          15407.03 MiB  1066.01 MiB  416.02 MiB    832.03 MiB        7658.4 MiB  0.12 MiB  31320.75 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ===========  ============  ================  ==========  ========  ============
+peak active: 4.76837158203125e-07 GiB | peak reserved: 0.001953125 GiB | num_retries: 0
+Tracker Max: 39.214577198028564 GiB

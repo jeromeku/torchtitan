@@ -1,0 +1,164 @@
++ NGPU=8
++ NNODES=1
++ CONFIG_FILE=./torchtitan/models/llama3/train_configs/debug_model.toml
++ overrides=
++ '[' 1 -ne 0 ']'
++ overrides=--parallelism.fsdp_reshard_after_forward=default
++ export WORLD_SIZE=8
++ WORLD_SIZE=8
++ export LOCAL_RANK=0
++ LOCAL_RANK=0
++ python -m scripts.estimate.estimation --job.config_file ./torchtitan/models/llama3/train_configs/debug_model.toml --memory_estimation.enabled --parallelism.fsdp_reshard_after_forward=default
+JobConfig(
+    job=Job(config_file='./torchtitan/models/llama3/train_configs/debug_model.toml', dump_folder='./outputs', description='Llama 3 debug training', use_for_integration_test=True, print_args=False),
+    profiling=Profiling(enable_profiling=False, save_traces_folder='profile_trace', profile_freq=10, enable_memory_snapshot=False, save_memory_snapshot_folder='memory_snapshot'),
+    metrics=Metrics(log_freq=1, enable_tensorboard=False, disable_color_printing=False, save_tb_folder='tb', save_for_all_ranks=False, enable_wandb=False),
+    model=Model(name='llama3', flavor='debugmodel', tokenizer_path='./tests/assets/tokenizer', converters=[], print_after_conversion=False),
+    optimizer=Optimizer(name='AdamW', lr=0.0008, beta1=0.9, beta2=0.95, eps=1e-08, weight_decay=0.1, implementation='fused', early_step_in_backward=False),
+    lr_scheduler=LRScheduler(warmup_steps=2, decay_ratio=0.8, decay_type='linear', lr_min=0.0),
+    training=Training(dataset='c4_test', dataset_path=None, local_batch_size=8, global_batch_size=-1, seq_len=2048, max_norm=1.0, steps=10, enable_cpu_offload=False, mixed_precision_param='bfloat16', mixed_precision_reduce='float32', compile=False, gc_freq=50, gc_debug=False, seed=None, deterministic=False),
+    parallelism=Parallelism(
+        data_parallel_replicate_degree=1,
+        enable_compiled_autograd=False,
+        data_parallel_shard_degree=-1,
+        fsdp_reshard_after_forward='default',
+        tensor_parallel_degree=1,
+        disable_loss_parallel=False,
+        enable_async_tensor_parallel=False,
+        pipeline_parallel_degree=1,
+        pipeline_parallel_split_points=[],
+        pipeline_parallel_layers_per_stage=None,
+        pipeline_parallel_schedule='1F1B',
+        pipeline_parallel_schedule_csv='',
+        pipeline_parallel_microbatch_size=1,
+        context_parallel_degree=1,
+        context_parallel_rotate_method='allgather',
+        expert_parallel_degree=1,
+        world_size=1
+    ),
+    checkpoint=Checkpoint(
+        enable_checkpoint=False,
+        folder='checkpoint',
+        initial_load_path=None,
+        initial_load_model_weights_only=True,
+        interval=10,
+        last_save_model_weights_only=False,
+        export_dtype='float32',
+        create_seed_checkpoint=False,
+        async_mode='disabled',
+        keep_latest_k=10,
+        load_step=-1,
+        exclude_from_loading=[],
+        enable_first_step_checkpoint=False,
+        last_save_in_safetensors_format=False
+    ),
+    activation_checkpoint=ActivationCheckpoint(mode='selective', selective_ac_option='2'),
+    float8=Float8(enable_fsdp_float8_all_gather=False, precompute_float8_dynamic_scale_for_fsdp=False, force_recompute_fp8_weight_in_bwd=False, recipe_name=None, filter_fqns=['output'], emulate=False, moe_fqns_prototype=[]),
+    mx=MX(use_fp8_dim1_cast_triton_kernel=True, recipe_name='mxfp8', filter_fqns=['output']),
+    comm=Comm(init_timeout_seconds=300, train_timeout_seconds=100, trace_buf_size=20000),
+    memory_estimation=MemoryEstimation(enabled=True, disable_fake_mode=False),
+    fault_tolerance=FaultTolerance(enable=False, replica_id=0, group_size=0, min_replica_size=1, semi_sync_method=None, sync_steps=5, should_quantize=False, fragment_sync_delay=0, fragment_update_alpha=0.0),
+    experimental=Experimental(custom_import='', custom_args_module=''),
+    validation=Validation(enabled=False, dataset='c4_validation', dataset_path=None, local_batch_size=8, seq_len=2048, freq=5, steps=10)
+)
+[titan] 2025-07-16 13:55:03,437 - root - INFO - Estimating memory usage...
+[titan] 2025-07-16 13:55:03,437 - root - INFO - Building 1-D device mesh with ['dp_shard'], [8]
+[titan] 2025-07-16 13:55:03,681 - root - INFO - Loading tokenizer from tokenizer.json
+[titan] 2025-07-16 13:55:03,685 - root - INFO - Building llama3 debugmodel with TransformerModelArgs(_enforced='This field is used to enforce all fields have defaults.', dim=256, n_layers=3, n_heads=16, n_kv_heads=None, vocab_size=2000, multiple_of=256, ffn_dim_multiplier=None, norm_eps=1e-05, rope_theta=500000, max_seq_len=2048, depth_init=True, use_flex_attn=False, attn_mask_type='causal', eos_id=1999)
+[titan] 2025-07-16 13:55:03,724 - root - INFO - Applied selective activation checkpointing to the model
+[titan] 2025-07-16 13:55:03,783 - root - INFO - Applied FSDP to the model
+[titan] 2025-07-16 13:55:03,810 - root - INFO - Vocab size: 2000
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([1024256]) 2048512
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([1024256]) 2048512
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([1024256]) 4097024
+Peak Memory at iter: 0
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp       All Gather    Reduce Scatter    OptState    Inputs    Total
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+cuda:0    1.71 MiB         1.63 MiB           0.12 MiB  0.0 MiB         0.0 MiB           591.32 MiB    250.0 MiB  0.0 MiB       0.0 MiB           0.0 MiB     0.25 MiB  845.03 MiB
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([1024256]) 2048512
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([1024256]) 2048512
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::ALLGATHER: torch.bfloat16 output_tensor.shape=torch.Size([852480]) 1704960
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([852480]) 3409920
+DEBUG::REDUCE_SCATTER: torch.float32 input_tensor.shape=torch.Size([1024256]) 4097024
+Peak Memory at iter: 1
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp       All Gather    Reduce Scatter    OptState    Inputs    Total
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+cuda:0    1.71 MiB         1.63 MiB           0.12 MiB  0.0 MiB         0.0 MiB           591.32 MiB    250.0 MiB  0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  848.46 MiB
+========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Module:  FSDPTransformer
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp       All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Peak Forward # 1          cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           528.81 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  539.54 MiB
+Before Pre-Forward # 1    cuda:0    1.71 MiB         0.0 MiB            0.12 MiB  0.0 MiB         0.0 MiB           0.0 MiB       0.0 MiB    0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  5.52 MiB
+After Pre-Forward # 1     cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           0.0 MiB       0.0 MiB    1.95 MiB      0.0 MiB           3.44 MiB    0.25 MiB  9.43 MiB
+Before Post-Forward # 1   cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           528.81 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  539.54 MiB
+After Post-Forward # 1    cuda:0    1.71 MiB         1.63 MiB           0.12 MiB  0.0 MiB         0.0 MiB           528.81 MiB    0.0 MiB    0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  535.96 MiB
+Peak Backward # 1         cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           466.32 MiB    71.48 MiB  0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  546.89 MiB
+Before Pre-Backward # 1   cuda:0    1.71 MiB         1.63 MiB           0.12 MiB  0.0 MiB         0.0 MiB           466.32 MiB    62.5 MiB   0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  535.96 MiB
+After Pre-Backward # 1    cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           466.32 MiB    62.5 MiB   0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  537.92 MiB
+Before Post-Backward # 1  cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  1.22 MiB        1.95 MiB          0.0 MiB       0.0 MiB    0.0 MiB       3.25 MiB          3.44 MiB    0.25 MiB  13.9 MiB
+After Post-Backward # 1   cuda:0    1.71 MiB         0.0 MiB            0.12 MiB  1.71 MiB        0.98 MiB          0.0 MiB       0.0 MiB    0.0 MiB       3.91 MiB          3.44 MiB    0.25 MiB  12.11 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Module:  FSDPTransformer.layers.0
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp       All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Peak Forward # 1          cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           241.13 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  251.85 MiB
+Before Pre-Forward # 1    cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           8.0 MiB       0.0 MiB    1.95 MiB      0.0 MiB           3.44 MiB    0.25 MiB  17.43 MiB
+After Pre-Forward # 1     cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           8.0 MiB       0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  18.73 MiB
+Before Post-Forward # 1   cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  235.85 MiB
+After Post-Forward # 1    cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  234.23 MiB
+Peak Backward # 1         cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.81 MiB        0.0 MiB           185.13 MiB    81.35 MiB  0.0 MiB       3.25 MiB          3.44 MiB    0.25 MiB  279.65 MiB
+Before Pre-Backward # 1   cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.81 MiB        0.0 MiB           209.13 MiB    8.98 MiB   1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  231.27 MiB
+After Pre-Backward # 1    cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.81 MiB        0.0 MiB           209.13 MiB    8.98 MiB   0.0 MiB       3.25 MiB          3.44 MiB    0.25 MiB  231.27 MiB
+Before Post-Backward # 1  cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.81 MiB        1.63 MiB          0.0 MiB       8.98 MiB   0.0 MiB       3.25 MiB          3.44 MiB    0.25 MiB  23.77 MiB
+After Post-Backward # 1   cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  1.22 MiB        0.0 MiB           0.0 MiB       8.98 MiB   0.0 MiB       3.25 MiB          3.44 MiB    0.25 MiB  20.93 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Module:  FSDPTransformer.layers.1
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ==========
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp        All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ==========
+Peak Forward # 1          cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           329.13 MiB    0.0 MiB     1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  339.85 MiB
+Before Pre-Forward # 1    cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           217.13 MiB    0.0 MiB     1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  226.23 MiB
+After Pre-Forward # 1     cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           217.13 MiB    0.0 MiB     1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  227.85 MiB
+Before Post-Forward # 1   cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB     1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  235.85 MiB
+After Post-Forward # 1    cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB     1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  234.23 MiB
+Peak Backward # 1         cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.41 MiB        0.0 MiB           217.13 MiB    266.48 MiB  1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  497.99 MiB
+Before Pre-Backward # 1   cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.41 MiB        0.0 MiB           217.13 MiB    8.98 MiB    1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  238.86 MiB
+After Pre-Backward # 1    cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.41 MiB        0.0 MiB           217.13 MiB    8.98 MiB    1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  240.49 MiB
+Before Post-Backward # 1  cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.41 MiB        1.63 MiB          209.13 MiB    8.98 MiB    1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  234.12 MiB
+After Post-Backward # 1   cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.81 MiB        0.0 MiB           209.13 MiB    8.98 MiB    1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  231.27 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  ==========  ============  ================  ==========  ========  ==========
+Module:  FSDPTransformer.layers.2
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+State & Call              Device    Sharded Param    Unsharded Param    Buffer    Sharded Grad    Unsharded Grad    Activation    Temp       All Gather    Reduce Scatter    OptState    Inputs    Total
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
+Peak Forward # 1          cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           458.25 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  468.98 MiB
+Before Pre-Forward # 1    cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  234.23 MiB
+After Pre-Forward # 1     cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           225.13 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  235.85 MiB
+Before Post-Forward # 1   cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           442.25 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  452.98 MiB
+After Post-Forward # 1    cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           442.25 MiB    0.0 MiB    1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  452.98 MiB
+Peak Backward # 1         cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           402.25 MiB    81.35 MiB  1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  494.33 MiB
+Before Pre-Backward # 1   cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           426.25 MiB    8.98 MiB   0.0 MiB       0.0 MiB           3.44 MiB    0.25 MiB  444.33 MiB
+After Pre-Backward # 1    cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         0.0 MiB           426.25 MiB    8.98 MiB   1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  445.96 MiB
+Before Post-Backward # 1  cuda:0    1.71 MiB         3.58 MiB           0.12 MiB  0.0 MiB         1.63 MiB          217.13 MiB    8.98 MiB   1.63 MiB      0.0 MiB           3.44 MiB    0.25 MiB  238.46 MiB
+After Post-Backward # 1   cuda:0    1.71 MiB         1.95 MiB           0.12 MiB  0.41 MiB        0.0 MiB           217.13 MiB    8.98 MiB   1.63 MiB      3.25 MiB          3.44 MiB    0.25 MiB  238.86 MiB
+========================  ========  ===============  =================  ========  ==============  ================  ============  =========  ============  ================  ==========  ========  ==========
