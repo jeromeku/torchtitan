@@ -22,7 +22,7 @@ from functools import lru_cache
 
 
 @dataclass(kw_only=True)
-class Qwen3MoeConfig:
+class Qwen3MoeConfig(BaseModelArgs):
     # Embeddings
     vocab_size: int = 151936
     hidden_size: int
@@ -217,79 +217,3 @@ Qwen3MoeConfig_235B_A22B = Qwen3MoeConfig(
     use_grouped_gemm=False,
     act_fn='silu',
 )
-
-@dataclass(kw_only=True)
-class Qwen3MoeConfig(BaseModelArgs):
-    # Embeddings
-    vocab_size: int
-    embed_dim: int
-    tie_word_embeddings: bool = False
-    max_seq_len: int = None
-    rope_base: float = 1_000_000.0
-
-    # Decoder
-    num_layers: int
-    intermediate_dim: int
-    mlp_only_layers: list[int] = field(default_factory=list)
-
-    # Attention
-    num_heads: int
-    num_kv_heads: int
-    head_dim: int
-    q_proj_bias: bool = False
-    k_proj_bias: bool = False
-    v_proj_bias: bool = False
-    attn_dropout: float = 0.0
-
-    # Norms
-    norm_eps: float = 1e-6  # Change to match HF's Qwen3ModelConfig
-    q_norm: bool = True
-    k_norm: bool = True
-
-    # MoE
-    num_experts: int
-    expert_intermediate_dim: int
-    num_experts_per_tok: int
-
-    # routing
-    score_fn: str = "softmax"
-    use_scatter_indices: bool = False
-    norm_topk_prob: bool = True  # NOTE: this defaults to `False` in HF Qwen3MoeConfig
-    output_router_logits: bool = False
-    router_aux_loss_coef: float | None = 1e-3
-
-    # experts
-    use_grouped_gemm: bool = False
-    act_fn: str = "silu"
-
-    @classmethod
-    def from_hf(cls, hf_config: HFQwen3MoeConfig, **kwargs):
-        head_dim = (
-            hf_config.hidden_size // hf_config.num_attention_heads
-        )
-
-        return cls(
-            vocab_size=hf_config.vocab_size,
-            embed_dim=hf_config.hidden_size,
-            num_layers=hf_config.num_hidden_layers,
-            intermediate_dim=hf_config.intermediate_size,
-            num_heads=hf_config.num_attention_heads,
-            num_kv_heads=hf_config.num_key_value_heads,
-            head_dim=head_dim,
-            num_experts=hf_config.num_experts,
-            expert_intermediate_dim=hf_config.moe_intermediate_size,
-            num_experts_per_tok=hf_config.num_experts_per_tok,
-            tie_word_embeddings=hf_config.tie_word_embeddings,
-            mlp_only_layers=hf_config.mlp_only_layers,
-            q_proj_bias=hf_config.attention_bias,
-            k_proj_bias=hf_config.attention_bias,
-            v_proj_bias=hf_config.attention_bias,
-            attn_dropout=hf_config.attention_dropout,
-            norm_eps=hf_config.rms_norm_eps,
-            norm_topk_prob=hf_config.norm_topk_prob,
-            output_router_logits=hf_config.output_router_logits,
-            router_aux_loss_coef=hf_config.router_aux_loss_coef,
-            max_seq_len=hf_config.max_position_embeddings,
-            rope_base=hf_config.rope_theta,
-            **kwargs,
-        )
