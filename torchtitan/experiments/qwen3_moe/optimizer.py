@@ -11,7 +11,7 @@ from torchtitan.components.ft import FTManager
 from torchtitan.components.optimizer import build_optimizers, OptimizersContainer
 from torchtitan.config_manager import JobConfig
 from torchtitan.distributed import ParallelDims
-
+from .model.model import Qwen3MoeDecoderLayer
 
 # for MoE auxiliary-loss-free load balancing
 def _update_expert_bias(
@@ -24,9 +24,10 @@ def _update_expert_bias(
     # TODO: Currently this sync is blocking (thus exposed) and happens on the
     # default compute stream. Need to assess if this is OK performance-wise.
     for model_part in model_parts:
-        for transformer_block in model_part.layers.values():
-            if transformer_block.moe_enabled:
-                moe = transformer_block.moe
+        for transformer_block in model_part.layers:
+            transformer_block: Qwen3MoeDecoderLayer
+            if transformer_block.use_moe:
+                moe = transformer_block.mlp
                 if moe.load_balance_coeff is None:
                     return
 
@@ -44,12 +45,13 @@ def _update_expert_bias(
                     moe.tokens_per_expert.zero_()
 
 
-def build_llama4_optimizers(
+def build_qwen3_optimizers(
     model_parts: list[nn.Module],
     job_config: JobConfig,
     parallel_dims: ParallelDims,
     ft_manager: FTManager,
 ) -> OptimizersContainer:
+
     optimizers = build_optimizers(
         model_parts=model_parts,
         job_config=job_config,

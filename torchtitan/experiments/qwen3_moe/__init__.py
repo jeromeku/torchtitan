@@ -11,10 +11,10 @@ from torchtitan.datasets.hf_datasets import build_hf_dataloader
 from torchtitan.models.llama3 import pipeline_llama
 from torchtitan.protocols.train_spec import register_train_spec, TrainSpec
 
-from .infra.parallelize import parallelize_llama
+from .infra.parallelize import parallelize_qwen3
 from .model.args import Qwen3MoeConfig
 from .model.model import Qwen3MoeModel
-from .optimizer import build_llama4_optimizers
+from .optimizer import build_qwen3_optimizers
 
 
 qwen3_moe_configs = {
@@ -53,9 +53,9 @@ register_train_spec(
         name="qwen3_moe",
         model_cls=Qwen3MoeModel,
         model_args=qwen3_moe_configs,
-        parallelize_fn=parallelize_llama,
-        pipelining_fn=pipeline_llama,
-        build_optimizers_fn=build_llama4_optimizers,
+        parallelize_fn=parallelize_qwen3,
+        pipelining_fn=None,
+        build_optimizers_fn=build_qwen3_optimizers,
         build_lr_schedulers_fn=build_lr_schedulers,
         build_dataloader_fn=build_hf_dataloader,
         build_tokenizer_fn=build_hf_tokenizer,

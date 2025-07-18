@@ -467,7 +467,9 @@ class Qwen3MoeDecoderLayer(nn.Module):
         self.n_heads = model_config.num_attention_heads
         self.dim = model_config.hidden_size
         self.self_attn = Qwen3MoeAttention(model_config)
-        if model_config.use_moe:
+        self.use_moe = model_config.use_moe
+        
+        if self.use_moe:
             self.mlp = Qwen3MoeSparseMoeBlock(model_config)
         else:
             raise ValueError("MoE only for now")

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
-CONFIG_FILE="/home/jeromeku/torchtitan/llama_debug.toml"
+CONFIG_FILE="/home/jeromeku/torchtitan/torchtitan/experiments/qwen3_moe/train_configs/debug.toml"
 NGPU=1
 MODULE="torchtitan.debug_train"
 

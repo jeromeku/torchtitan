@@ -71,7 +71,8 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         self.job_config = job_config
 
         logger.info(f"Starting job: {job_config.job.description}")
-
+        breakpoint()
+        
         if job_config.experimental.custom_import:
             importlib.import_module(job_config.experimental.custom_import)
 

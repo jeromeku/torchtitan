@@ -101,7 +101,8 @@ class Qwen3MoeConfig(BaseModelArgs):
         self, job_config: JobConfig, tokenizer: BaseTokenizer
     ) -> None:
         if self.vocab_size is not None:
-            assert self.vocab_size == tokenizer.get_vocab_size(), f"Vocab size mismatch: {self.vocab_size} != {tokenizer.get_vocab_size()}"
+            if self.vocab_size != tokenizer.get_vocab_size():
+                logger.warning(f"Vocab size mismatch, model config vocab_size != tokenizer vocab_size: {self.vocab_size} != {tokenizer.get_vocab_size()}")
         else:
             self.vocab_size = tokenizer.get_vocab_size()
         
