@@ -303,18 +303,18 @@ def apply_rotary_emb(q, k, cos, sin, unsqueeze_dim=2):
     return q_embed, k_embed
 
 
-def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
-    """
-    This is the equivalent of torch.repeat_interleave(x, dim=1, repeats=n_rep). The hidden states go from (batch,
-    num_key_value_heads, seqlen, head_dim) to (batch, num_attention_heads, seqlen, head_dim)
-    """
-    batch, num_key_value_heads, slen, head_dim = hidden_states.shape
-    if n_rep == 1:
-        return hidden_states
-    hidden_states = hidden_states[:, :, None, :, :].expand(
-        batch, num_key_value_heads, n_rep, slen, head_dim
-    )
-    return hidden_states.reshape(batch, num_key_value_heads * n_rep, slen, head_dim)
+# def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
+#     """
+#     This is the equivalent of torch.repeat_interleave(x, dim=1, repeats=n_rep). The hidden states go from (batch,
+#     num_key_value_heads, seqlen, head_dim) to (batch, num_attention_heads, seqlen, head_dim)
+#     """
+#     batch, num_key_value_heads, slen, head_dim = hidden_states.shape
+#     if n_rep == 1:
+#         return hidden_states
+#     hidden_states = hidden_states[:, :, None, :, :].expand(
+#         batch, num_key_value_heads, n_rep, slen, head_dim
+#     )
+#     return hidden_states.reshape(batch, num_key_value_heads * n_rep, slen, head_dim)
 
 
 class Qwen3MoeAttention(nn.Module):
@@ -441,6 +441,11 @@ class Qwen3MoeAttention(nn.Module):
         else:
             return output
 
+    def init_weights(self, init_std: float):
+        for linear in (self.q_proj, self.k_proj, self.v_proj):
+            nn.init.trunc_normal_(linear.weight, mean=0.0, std=0.02)
+        nn.init.trunc_normal_(self.o_proj.weight, mean=0.0, std=init_std)
+
 
 class Qwen3MoeDecoderLayer(nn.Module):
     """
@@ -505,14 +510,11 @@ class Qwen3MoeDecoderLayer(nn.Module):
 
         return x
 
-    # def init_weights(self, buffer_device: torch.device):
-    #     for norm in (self.attention_norm, self.ffn_norm):
-    #         norm.reset_parameters()
-    #     self.attention.init_weights(self.weight_init_std)
-    #     if self.moe_enabled:
-    #         self.moe.init_weights(self.weight_init_std, buffer_device)
-    #     else:
-    #         self.feed_forward.init_weights(self.weight_init_std)
+    def init_weights(self, buffer_device: torch.device):
+        for norm in (self.attn_norm, self.mlp_norm):
+            norm.reset_parameters()
+        self.self_attn.init_weights(self.weight_init_std)
+        self.mlp.init_weights(self.weight_init_std, buffer_device)
 
 
 class Qwen3MoeModel(nn.Module):
@@ -597,38 +599,40 @@ class Qwen3MoeModel(nn.Module):
         output = self.lm_head(h) if self.lm_head else h
         return hidden_states, output if output_hidden_states else output
 
-    # def init_weights(
-    #     self,
-    #     buffer_device: torch.device | None = None,
-    # ):
-    #     """
-    #     [Note: On ``init_weights`` vs. ``reset_parameters``]
-    #     Modules may define ``reset_parameters`` to initialize parameter values.
-    #     ``reset_parameters`` is meant to only initialize directly owned
-    #     parameters/buffers, not those of their child modules, and it can be
-    #     used to give the initial values for these tensors.
-    #     Separately, users may want custom initialization for their modules,
-    #     different from that in ``reset_parameters``. For this, we define
-    #     ``init_weights``. We only call it in the constructor of this
-    #     ``Transformer`` root module to avoid reinitializing tensors.
-    #     """
-    #     buffer_device = buffer_device or self.freqs_cis.device
-    #     with torch.device(buffer_device):
-    #         self.freqs_cis = self._precompute_freqs_cis()
-    #     if self.tok_embeddings is not None:
-    #         nn.init.normal_(self.tok_embeddings.weight)
-    #     for layer in self.layers.values():
-    #         if layer is not None:
-    #             layer.init_weights(buffer_device=buffer_device)
-    #     if self.norm is not None:
-    #         self.norm.reset_parameters()
-    #     final_out_std = self.model_config.dim**-0.5
-    #     cutoff_factor = 3
-    #     if self.output is not None:
-    #         nn.init.trunc_normal_(
-    #             self.output.weight,
-    #             mean=0.0,
-    #             std=final_out_std,
-    #             a=-cutoff_factor * final_out_std,
-    #             b=cutoff_factor * final_out_std,
-    #         )
+    def init_weights(
+        self,
+        buffer_device: torch.device | None = None,
+    ):
+        """
+        [Note: On ``init_weights`` vs. ``reset_parameters``]
+        Modules may define ``reset_parameters`` to initialize parameter values.
+        ``reset_parameters`` is meant to only initialize directly owned
+        parameters/buffers, not those of their child modules, and it can be
+        used to give the initial values for these tensors.
+        Separately, users may want custom initialization for their modules,
+        different from that in ``reset_parameters``. For this, we define
+        ``init_weights``. We only call it in the constructor of this
+        ``Transformer`` root module to avoid reinitializing tensors.
+        """
+        buffer_device = buffer_device
+        
+        if self.tok_embeddings is not None:
+            nn.init.normal_(self.tok_embeddings.weight)
+        
+        for layer in self.layers:
+            if layer is not None:
+                layer.init_weights(buffer_device=buffer_device)
+        
+        if self.norm is not None:
+            self.norm.reset_parameters()
+        
+        final_out_std = self.model_config.dim**-0.5
+        cutoff_factor = 3
+        if self.lm_head is not None:
+            nn.init.trunc_normal_(
+                self.lm_head.weight,
+                mean=0.0,
+                std=final_out_std,
+                a=-cutoff_factor * final_out_std,
+                b=cutoff_factor * final_out_std,
+            )
