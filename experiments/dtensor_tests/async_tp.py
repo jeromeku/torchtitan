@@ -19,8 +19,9 @@ import torch._inductor.config as inductor_config
 
 from torch._logging import set_logs
 import logging
-set_logs(dynamo=logging.DEBUG, inductor=logging.DEBUG, aot_graphs=True, graph_code_verbose=True, distributed=logging.DEBUG, fsdp=logging.DEBUG, dtensor=logging.DEBUG)
+#set_logs(dynamo=logging.DEBUG, inductor=logging.DEBUG, aot_graphs=True,  distributed=logging.DEBUG, fsdp=logging.DEBUG, dtensor=logging.DEBUG)
 inductor_config.trace.enabled = True
+set_logs( dtensor=logging.DEBUG)
 
 
 class SimpleLinear(torch.nn.Module):
@@ -83,7 +84,7 @@ def main():
 
     hidden_dim = 1024
     seqlen = 128
-    compile = True
+    compile = False
     mode = "default"
 
     model = SimpleLinear(hidden_dim)
