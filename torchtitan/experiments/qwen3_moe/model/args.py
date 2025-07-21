@@ -111,11 +111,11 @@ class Qwen3MoeConfig(BaseModelArgs):
         assert self.eos_id is not None, "Tokenizer does not have eos_id, please set manually."
         logger.info(f"eos_id set to {self.eos_id}")
 
-        if self.use_grouped_mm and not has_cuda_capability(9, 0):
+        if self.use_grouped_gemm and not has_cuda_capability(9, 0):
             logger.warning(
                 "Failed to use grouped mm, which is only supported on SM90 or later",
             )
-            self.use_grouped_mm = False
+            self.use_grouped_gemm = False
 
         if job_config.activation_checkpoint.mode == "selective" and self.use_flex_attn:
             raise ValueError(
@@ -132,6 +132,9 @@ class Qwen3MoeConfig(BaseModelArgs):
         self, model: nn.Module, seq_len: int
     ) -> tuple[int, float]:
         print("TODO!")
+        nparams = sum(p.numel() for p in model.parameters())
+        flops = 1.
+        return nparams, flops
 
 @lru_cache
 def _get_hf_config(model_id: str):
