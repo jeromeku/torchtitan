@@ -92,6 +92,26 @@ class Qwen3MoeSparseMoeBlock(nn.Module):
         self.shared_expert = None  # Qwen3 MoE does not use shared experts
         self.topk = topk
 
+        # define fields for auxiliary-loss-free load balancing (https://arxiv.org/abs/2408.15664)
+        # NOTE: tokens_per_expert is accumulated in the model forward pass.
+        #       expert_bias is updated outside the model in an optimzer step pre hook
+        #       to work with gradient accumulation.
+        self.load_balance_coeff = config.router_aux_loss_coef
+        if self.load_balance_coeff is not None:
+            assert self.load_balance_coeff > 0.0
+            self.register_buffer(
+                "expert_bias",
+                torch.zeros(num_experts, dtype=torch.float32),
+                persistent=True,
+            )
+            self.register_buffer(
+                "tokens_per_expert",
+                torch.zeros(num_experts, dtype=torch.float32),
+                persistent=True,
+            )
+        else:
+            self.expert_bias = None
+
     def _permute_and_pad(
         self,
         x: torch.Tensor,
@@ -193,9 +213,33 @@ class Qwen3MoeSparseMoeBlock(nn.Module):
             f"{router_outputs.gather_indices.shape} != {torch.Size(M * topk)}"
         )
 
+        # tokens_per_expert will be used to update the expert bias for load balancing.
+        # Prevent extra local tokens accumulation on evaluation or activation recomputation.
+        if self.load_balance_coeff is not None and torch.is_grad_enabled():
+            with torch.no_grad():
+                self.tokens_per_expert.add_(router_outputs.num_tokens_per_expert)
+
+
         x = self.run_experts(x, router_outputs=router_outputs)
 
         return x.view(bs, seqlen, dim)
+
+    def init_weights(
+        self,
+        init_std: float,
+        buffer_device: torch.device,
+    ):
+        self.experts.init_weights(init_std)
+        self.router.init_weights(init_std)
+        
+        if self.load_balance_coeff is not None:
+            with torch.device(buffer_device):
+                self.expert_bias = torch.zeros(
+                    self.experts.num_experts, dtype=torch.float32
+                )
+                self.tokens_per_expert = torch.zeros(
+                    self.experts.num_experts, dtype=torch.float32
+                )
 
 
 # for debugging only
@@ -481,6 +525,9 @@ class Qwen3MoeDecoderLayer(nn.Module):
 
         self.attn_norm = RMSNorm(self.dim, eps=model_config.rms_norm_eps)
         self.mlp_norm = RMSNorm(self.dim, eps=model_config.rms_norm_eps)
+        
+        #depthwise layer init
+        self.weight_init_std = 0.02 / (2 * (layer_id + 1)) ** 0.5
 
     def forward(
         self,

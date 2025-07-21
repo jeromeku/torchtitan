@@ -26,6 +26,7 @@ qwen3_moe_configs = {
         intermediate_size=6144,
         num_attention_heads=32,
         moe_intermediate_size=768,
+        router_aux_loss_coef=None
     ),
     "30B-A30B": Qwen3MoeConfig(
         num_hidden_layers=24,

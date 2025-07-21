@@ -304,3 +304,6 @@ class TokenChoiceTopKRouter(nn.Module):
             outputs.selected_experts = selected_experts.view(-1)
 
         return outputs
+
+    def init_weights(self, init_std: float):
+        nn.init.trunc_normal_(self.gate.weight, mean=0.0, std=init_std)
