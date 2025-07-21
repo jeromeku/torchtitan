@@ -16,7 +16,7 @@ def init_logger():
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
     formatter = logging.Formatter(
-        "[titan] %(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "[titan] %(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s"
     )
     ch.setFormatter(formatter)
     logger.addHandler(ch)
