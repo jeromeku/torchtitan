@@ -675,7 +675,7 @@ class Qwen3MoeModel(nn.Module):
         if self.norm is not None:
             self.norm.reset_parameters()
         
-        final_out_std = self.model_config.dim**-0.5
+        final_out_std = self.model_config.hidden_size ** -0.5
         cutoff_factor = 3
         if self.lm_head is not None:
             nn.init.trunc_normal_(

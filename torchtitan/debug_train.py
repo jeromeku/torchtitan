@@ -71,7 +71,6 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         self.job_config = job_config
 
         logger.info(f"Starting job: {job_config.job.description}")
-        breakpoint()
         
         if job_config.experimental.custom_import:
             importlib.import_module(job_config.experimental.custom_import)
@@ -83,7 +82,6 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         self.device = torch.device(f"{device_type}:{int(os.environ['LOCAL_RANK'])}")
         # Device has to be set before creating TorchFT manager.
         device_module.set_device(self.device)
-        breakpoint()
         # init distributed and build meshes
         dist_utils.init_distributed(job_config)
         world_size = int(os.environ["WORLD_SIZE"])
@@ -267,6 +265,7 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         ):
             self.ft_manager.set_all_reduce_hook(self.model_parts)
 
+        breakpoint()
         # initialize device memory monitor and get peak flops for MFU calculation
         device_memory_monitor = self.metrics_processor.device_memory_monitor
         gpu_peak_flops = utils.get_peak_flops(device_memory_monitor.device_name)
