@@ -240,7 +240,6 @@ def parallelize_qwen3(
                 dp_mod_ep_mesh_dim_names.append("dp_replicate")
             dp_mod_ep_mesh_dim_names.append("dp_shard_mod_ep")
         
-        breakpoint()
         apply_fsdp(
             model,
             dp_mesh,
@@ -388,6 +387,8 @@ def apply_fsdp(
     cpu_offload: bool = False,
     reshard_after_forward_policy: str = "default",
     dp_mod_ep_mesh: DeviceMesh | None = None,
+    moe_module_name: str = "mlp",
+    moe_experts_name: str = "experts",
 ):
     """
     Apply data parallelism (via FSDP2) to the model.
@@ -406,6 +407,7 @@ def apply_fsdp(
             - "never" will disable `reshard_after_forward` for all forward passes.
 
     """
+    breakpoint()
     use_mp = param_dtype is not None and reduce_dtype is not None
     if use_mp:
         mp_policy = MixedPrecisionPolicy(param_dtype=param_dtype, reduce_dtype=reduce_dtype)
@@ -437,11 +439,18 @@ def apply_fsdp(
 
         # NOTE: in an MoE layer, the router and the shared experts
         #       are sharded together with the TransformerBlock
-        if transformer_block.moe_enabled and dp_mod_ep_mesh:
+        # TODO: Only need to shard if dp_mod_ep_mesh.size() > 1 and dp_mod_ep_mesh.ndim == 1
+        if dp_mod_ep_mesh:
+            moe = getattr(transformer_block, moe_module_name, None)
+            assert moe is not None, f"{moe_module_name} not found in {type(transformer_block).__name__}"
+            experts = getattr(moe, moe_experts_name, None)
+            assert experts is not None, f"{moe_module_name}.{moe_experts_name} not found in {type(transformer_block).__name__}"
+
             fsdp_mod_ep_config = fsdp_config.copy()
             fsdp_mod_ep_config["mesh"] = dp_mod_ep_mesh
+            breakpoint()
             fully_shard(
-                transformer_block.moe.experts,
+                experts,
                 **fsdp_mod_ep_config,
                 reshard_after_forward=reshard_after_forward,
             )
@@ -524,7 +533,7 @@ def apply_moe_ep_tp(
         transformer_block: torch.nn.Module
 
 #        experts_module = transformer_block.get_submodule(f"{moe_module_name}.{moe_experts_name}")
-        breakpoint()    
+        
         parallelize_module(
             module=experts,
             device_mesh=experts_mesh,
