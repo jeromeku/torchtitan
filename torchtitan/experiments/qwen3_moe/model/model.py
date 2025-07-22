@@ -15,7 +15,7 @@ from .args import Qwen3MoeConfig
 from .attention import build_attention, init_attention_mask
 
 
-class RMSNorm(nn.Module):
+class Qwen3MoeRMSNorm(nn.Module):
     """
     Root Mean Square Normalization in fp32.
 
@@ -30,7 +30,7 @@ class RMSNorm(nn.Module):
         super().__init__()
         self.normalized_shape = (dim,)
         self.eps = eps
-        self.scale = nn.Parameter(torch.ones(dim))
+        self.weight = nn.Parameter(torch.ones(dim))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -47,6 +47,8 @@ class RMSNorm(nn.Module):
         )
         return x_normed * self.scale
 
+    def reset_parameters(self):
+        torch.nn.init.ones_(self.weight)
 
 # TODO: add aux_routing loss
 class Qwen3MoeSparseMoeBlock(nn.Module):
@@ -416,8 +418,8 @@ class Qwen3MoeAttention(nn.Module):
         self.o_proj = nn.Linear(num_heads * head_dim, hidden_size, bias=False)
         self.sdpa = build_attention(model_config.use_flex_attention, model_config.attn_mask_type)
 
-        self.q_norm = RMSNorm(dim=head_dim, eps=model_config.rms_norm_eps)
-        self.k_norm = RMSNorm(dim=head_dim, eps=model_config.rms_norm_eps)
+        self.q_norm = Qwen3MoeRMSNorm(dim=head_dim, eps=model_config.rms_norm_eps)
+        self.k_norm = Qwen3MoeRMSNorm(dim=head_dim, eps=model_config.rms_norm_eps)
 
     def forward(
         self,
@@ -523,8 +525,8 @@ class Qwen3MoeDecoderLayer(nn.Module):
         else:
             raise ValueError("MoE only for now")
 
-        self.attn_norm = RMSNorm(self.dim, eps=model_config.rms_norm_eps)
-        self.mlp_norm = RMSNorm(self.dim, eps=model_config.rms_norm_eps)
+        self.attn_norm = Qwen3MoeRMSNorm(self.dim, eps=model_config.rms_norm_eps)
+        self.mlp_norm = Qwen3MoeRMSNorm(self.dim, eps=model_config.rms_norm_eps)
         
         #depthwise layer init
         self.weight_init_std = 0.02 / (2 * (layer_id + 1)) ** 0.5
@@ -584,7 +586,7 @@ class Qwen3MoeModel(nn.Module):
                 for layer_idx in range(model_config.num_hidden_layers)
             ]
         )
-        self.norm = RMSNorm(hidden_size, eps=model_config.rms_norm_eps)
+        self.norm = Qwen3MoeRMSNorm(hidden_size, eps=model_config.rms_norm_eps)
         self.lm_head = nn.Linear(hidden_size, vocab_size, bias=False)
         self.cached_position_ids = None
 
