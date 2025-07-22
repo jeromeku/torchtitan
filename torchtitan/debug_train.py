@@ -12,6 +12,7 @@ from typing import Any, Generator, Iterable, Optional
 
 import torch
 from torch.distributed.elastic.multiprocessing.errors import record
+import torch.distributed as dist
 
 import torchtitan.components.ft as ft
 import torchtitan.protocols.train_spec as train_spec_module
@@ -83,8 +84,16 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         # Device has to be set before creating TorchFT manager.
         device_module.set_device(self.device)
         # init distributed and build meshes
-        dist_utils.init_distributed(job_config)
-        world_size = int(os.environ["WORLD_SIZE"])
+        
+        if job_config.distributed_debug.enable:
+            debug_config = job_config.distributed_debug
+            dist.init_process_group(debug_config.backend, store=debug_config.store(), world_size=debug_config.world_size, rank=debug_config.rank)
+            world_size = debug_config.world_size
+        else:
+            dist_utils.init_distributed(job_config)
+            world_size = int(os.environ["WORLD_SIZE"])
+        breakpoint()
+
         parallelism_config = job_config.parallelism
         self.parallel_dims = parallel_dims = ParallelDims(
             dp_shard=parallelism_config.data_parallel_shard_degree,
@@ -139,7 +148,6 @@ class Trainer(torch.distributed.checkpoint.stateful.Stateful):
         )
 
         # build model (using meta init)
-        breakpoint()
         model_args = self.train_spec.model_args[job_config.model.flavor]
         # set the model args from training job configs
         model_args.update_from_config(job_config, tokenizer)

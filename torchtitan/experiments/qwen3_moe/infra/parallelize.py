@@ -467,12 +467,25 @@ def apply_moe_ep_tp(
     tp_mesh: DeviceMesh | None,
     ep_mesh: DeviceMesh | None,
     ep_tp_mesh: DeviceMesh | None,
-    moe_module_name: str = "moe",
+    moe_module_name: str = "mlp",
+    moe_router_name: str = "router",
+    moe_experts_name: str = "experts",
+    moe_shared_expert_name: str = "shared_expert",
     has_shared_expert: bool = False,
 ):
-    assert any(moe_module_name in name for name, _ in model.named_modules()), "No moe modules found"
+    _block: torch.nn.Module = model.layers[0]
+    # Check for router and experts in moe layer
+    assert any(moe_module_name in n for n in _block.named_modules())
+    
+    _router = getattr(_block, f"{moe_module_name}.{moe_router_name}", None) 
+    assert _router is not None, f"{moe_module_name}.{moe_router_name} missing in {_block}"
+    assert getattr(_router, "gate", None) is not None, f"{_router} missing gate module"
+    assert getattr(_block, f"{moe_module_name}.{moe_experts_name}", None) is not None, f"{moe_module_name}.{moe_experts_name} missing in {_block}"
+    
+    assert not has_shared_expert, "Qwen3 Moe does not have shared expert"
+    
+    for transformer_block in model.layers:
 
-    for transformer_block in model.layers.values():
         if tp_mesh is not None:
             moe_layer_plan = {
                 # input / output sharding on the seqlen dim
@@ -485,11 +498,12 @@ def apply_moe_ep_tp(
                     desired_output_layouts=(Shard(1),),
                 ),
                 # replicate computation for the router
-                f"{moe_module_name}.router.gate": NoParallel(),
+                f"{moe_module_name}.{moe_router_name}.gate": NoParallel(),
             }
-            if has_shared_expert:
+            
+            if has_shared_expert:                
                 # input Replicate, output Partial
-                moe_layer_plan.update({f"{moe_module_name}.shared_expert": TensorParallel()})
+                moe_layer_plan.update({f"{moe_module_name}.{moe_shared_expert_name}": TensorParallel()})
 
             parallelize_module(
                 module=transformer_block,
@@ -511,7 +525,9 @@ def apply_moe_ep_tp(
             experts_mesh = ep_tp_mesh
             experts_plan = ExpertTensorParallel(tp_mesh=tp_mesh, ep_mesh=ep_mesh)
         transformer_block: torch.nn.Module
-        experts_module = transformer_block.get_submodule(f"{moe_module_name}.experts")
+
+        experts_module = transformer_block.get_submodule(f"{moe_module_name}.{moe_experts_name}")
+        
         parallelize_module(
             module=experts_module,
             device_mesh=experts_mesh,

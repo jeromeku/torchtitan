@@ -12,6 +12,9 @@ from dataclasses import asdict, dataclass, field, fields, is_dataclass, make_dat
 from typing import Any, Literal, Type
 
 import torch
+import torch.distributed as dist
+
+from torch.testing._internal.distributed.fake_pg import FakeStore
 import tyro
 
 try:
@@ -707,6 +710,13 @@ class Validation:
             self.steps > 0 or self.steps == -1
         ), "validation steps must be positive or -1"
 
+@dataclass
+class DistributedDebug:
+    enable: bool = False
+    world_size: int = 1
+    rank: int = 0
+    store: dist.Store = FakeStore
+    backend: str = "fake"
 
 @dataclass
 class JobConfig:
@@ -734,6 +744,8 @@ class JobConfig:
     experimental: Experimental = field(default_factory=Experimental)
     validation: Validation = field(default_factory=Validation)
 
+    distributed_debug: DistributedDebug = field(default_factory=DistributedDebug)
+    
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
