@@ -148,21 +148,7 @@ def apply_ddp(
 def parallelize_qwen3(
     model: nn.Module,
     parallel_dims: ParallelDims,
-    # TODO: refactor these settings, should be packed as training config
     job_config: JobConfig,
-    #
-    #  train_seq_len: int,
-    # async_tp: bool = False,
-    # enable_float8: bool = False,
-    # float8_tensorwise: bool = False,
-    # loss_parallel: bool = False,
-    # activation_checkpoint: str = "none",
-    # should_compile: bool = False,
-    # fsdp_mp_param_dtype: torch.dtype = None,
-    # fsdp_mp_reduce_dtype: torch.dtype = None,
-    # reshard_policy: Literal["default", "always", "never"] = "default",
-    # enable_cpu_offload: bool = False,
-    # enable_compiled_autograd: bool = False
 ):
     """
     Apply tensor parallelism, activation checkpointing, torch.compile, and data
@@ -178,6 +164,7 @@ def parallelize_qwen3(
     # TODO: TP currently cannot handle uneven seq_len because we set
     #       `use_local_output=True` to use plain Tensors for legacy reasons.
     #       Need to revisit this.
+    # TODO: Add check for CP enablement to simplify requirement
     assert (
         training.seq_len % parallel_dims.seq_len_divisor == 0
     ), f"""
@@ -187,8 +174,11 @@ def parallelize_qwen3(
 
     if parallel_dims.tp_enabled:
         
-        if parallelism.enable_async_tensor_parallel:
-            raise RuntimeError("TODO")
+        if (
+            job_config.parallelism.enable_async_tensor_parallel
+            and not job_config.training.compile
+        ):
+            raise RuntimeError("Async TP requires --training.compile")
 
         enable_float8_linear = "float8" in job_config.model.converters
         float8_is_rowwise = job_config.float8.recipe_name in (
@@ -210,6 +200,7 @@ def parallelize_qwen3(
         )
 
     # TODO: shall we support tensorwise float8 comms for MoE TP
+    breakpoint()
     if parallel_dims.tp_enabled or parallel_dims.ep_enabled:
         apply_moe_ep_tp(
             model,
@@ -248,7 +239,8 @@ def parallelize_qwen3(
             if parallel_dims.dp_replicate_enabled:
                 dp_mod_ep_mesh_dim_names.append("dp_replicate")
             dp_mod_ep_mesh_dim_names.append("dp_shard_mod_ep")
-
+        
+        breakpoint()
         apply_fsdp(
             model,
             dp_mesh,
@@ -368,6 +360,7 @@ def apply_non_moe_tp(
                 }
             )
 
+        breakpoint()
         parallelize_module(
             module=transformer_block,
             device_mesh=tp_mesh,
@@ -423,7 +416,7 @@ def apply_fsdp(
     if cpu_offload:
         fsdp_config["offload_policy"] = CPUOffloadPolicy()
 
-    for layer_id, transformer_block in model.layers.items():
+    for layer_id, transformer_block in enumerate(model.layers):
         if reshard_after_forward_policy == "always":
             reshard_after_forward = True
         elif reshard_after_forward_policy == "never":
@@ -474,13 +467,17 @@ def apply_moe_ep_tp(
     has_shared_expert: bool = False,
 ):
     _block: torch.nn.Module = model.layers[0]
-    # Check for router and experts in moe layer
-    assert any(moe_module_name in n for n in _block.named_modules())
     
-    _router = getattr(_block, f"{moe_module_name}.{moe_router_name}", None) 
+    # Check for router and experts in moe layer
+    assert any(moe_module_name in n for n in _block.named_modules()), f"No MoE modules {moe_module_name} in decoder layer"
+    _moe = getattr(_block, moe_module_name)
+
+    _router = getattr(_moe, moe_router_name, None) 
     assert _router is not None, f"{moe_module_name}.{moe_router_name} missing in {_block}"
     assert getattr(_router, "gate", None) is not None, f"{_router} missing gate module"
-    assert getattr(_block, f"{moe_module_name}.{moe_experts_name}", None) is not None, f"{moe_module_name}.{moe_experts_name} missing in {_block}"
+    
+    experts = getattr(_moe, moe_experts_name, None)
+    assert experts is not None, f"{moe_module_name}.{moe_experts_name} missing in {_block}"
     
     assert not has_shared_expert, "Qwen3 Moe does not have shared expert"
     
@@ -526,10 +523,10 @@ def apply_moe_ep_tp(
             experts_plan = ExpertTensorParallel(tp_mesh=tp_mesh, ep_mesh=ep_mesh)
         transformer_block: torch.nn.Module
 
-        experts_module = transformer_block.get_submodule(f"{moe_module_name}.{moe_experts_name}")
-        
+#        experts_module = transformer_block.get_submodule(f"{moe_module_name}.{moe_experts_name}")
+        breakpoint()    
         parallelize_module(
-            module=experts_module,
+            module=experts,
             device_mesh=experts_mesh,
             parallelize_plan=experts_plan,
         )
