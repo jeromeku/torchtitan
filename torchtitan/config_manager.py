@@ -120,6 +120,7 @@ class Model:
     converters have been applied.
     """
 
+    dtype: Literal["bfloat16", "float16", "float32"] = "bfloat16"
 
 @dataclass
 class Optimizer:

@@ -38,7 +38,7 @@ class Qwen3MoeConfig(BaseModelArgs):
     # Attention
     num_attention_heads: int
     num_key_value_heads: int = 4
-    head_dim: int = 64
+    head_dim: int = 128
     q_proj_bias: bool = False
     k_proj_bias: bool = False
     v_proj_bias: bool = False
@@ -57,19 +57,25 @@ class Qwen3MoeConfig(BaseModelArgs):
     num_experts: int = 128
     moe_intermediate_size: int
     num_experts_per_tok: int = 8
+    
     # routing
     score_fn: str = "softmax"
     use_scatter_indices: bool = False
-    norm_topk_prob: bool = False
+    norm_topk_prob: bool = True
     output_router_logits: bool = False
     router_aux_loss_coef: float = 0.001
+    
     # experts
     use_grouped_gemm: bool = False
     act_fn: str = "silu"
 
     @classmethod
     def from_hf(cls, hf_config: HFQwen3MoeConfig, **kwargs):
-        head_dim = hf_config.hidden_size // hf_config.num_attention_heads
+
+        # Sanity checks
+        assert getattr(hf_config, "head_dim", None) is not None, f"Qwen3MoeConfig should specify head_dim"
+        head_dim = hf_config.head_dim
+        assert hf_config.norm_topk_prob, f"Qwen3Moe normalizes topk prob"
 
         return cls(
             vocab_size=hf_config.vocab_size,

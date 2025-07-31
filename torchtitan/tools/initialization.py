@@ -1,6 +1,13 @@
 import torch
 from contextlib import contextmanager
 
+@contextmanager
+def set_default_torch_dtype(dtype: torch.dtype):
+    old_dtype = torch.get_default_dtype()
+    torch.set_default_dtype(dtype)
+    yield
+    torch.set_default_dtype(old_dtype)
+
 # credit: huggingface accelerate: https://github.com/huggingface/accelerate/blob/07ce74868cf0197a43dfa7aaf120384ec5a4afd8/src/accelerate/big_modeling.py#L97
 @contextmanager
 def init_on_device(device: torch.device | str, include_buffers: bool = None):
