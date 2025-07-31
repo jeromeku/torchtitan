@@ -1,6 +1,16 @@
 TODO
 - auxiliary router loss - use HF auxiliary loss func -- need to save router logits from each layer then calculate at lm head level 
+    - revert expert_bias
+- pipelining_sft - see PP implementation
+- FSDP2 + TP + PP benchmarking
+- DeepEP
+- TE GroupedLinear
+
+
+--- 
+
 - kv cache inference attention
+- 
 - model conversion
 - lmeval
 - throughput benchmarking
