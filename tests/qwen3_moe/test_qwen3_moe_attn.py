@@ -6,7 +6,7 @@ import transformers.models.qwen3_moe.modeling_qwen3_moe as hf_qwen3_moe
 
 from torchtitan.experiments.qwen3_moe.model.model import Qwen3MoeRotaryEmbedding, Qwen3MoeAttention, Qwen3MoeRMSNorm, Qwen3MoeDecoderLayer, Qwen3MoeModel
 
-from torchtitan.experiments.qwen3_moe.model.args import Qwen3MoeConfig
+from torchtitan.experiments.qwen3_moe.model.configuration import Qwen3MoeConfig
 
 from torchtitan.testing.utils import (
     TEST_TOL,

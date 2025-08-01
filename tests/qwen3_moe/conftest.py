@@ -4,14 +4,15 @@ from transformers.models.qwen3_moe.configuration_qwen3_moe import (
 )
 from transformers.models.qwen3_moe.modeling_qwen3_moe import Qwen3MoeModel as HFQwen3MoeModel
 
-from torchtitan.experiments.qwen3_moe.model.args import (
+from torchtitan.experiments.qwen3_moe.model.configuration import (
     Qwen3MoeConfig,
 )
 
 from torchtitan.experiments.qwen3_moe.model.model import Qwen3MoeModel
 from torchtitan.tools.initialization import init_on_device
 import torch
-
+from torchtitan.experiments.qwen3_moe import QWEN3_30B_A3B
+from torchtitan.tools.utils import download_hf_config
 @pytest.fixture
 def device_meta():
     with init_on_device("meta", include_buffers=False):
@@ -25,13 +26,15 @@ def dtype(request: pytest.FixtureRequest) -> torch.dtype:
     return request.param
 
 @pytest.fixture
-def hf_moe_config() -> HFQwen3MoeConfig:
-    return HFQwen3MoeConfig(num_hidden_layers=1)
+def hf_qwen3_moe_config() -> HFQwen3MoeConfig:
+    config: HFQwen3MoeConfig = download_hf_config(QWEN3_30B_A3B)
+    config.num_hidden_layers = 1
+    return config
 
 
 @pytest.fixture
-def qwen3_moe_config(hf_moe_config: Qwen3MoeConfig) -> Qwen3MoeConfig:
-    return Qwen3MoeConfig.from_hf(hf_moe_config)
+def qwen3_moe_config(hf_qwen3_moe_config: Qwen3MoeConfig) -> Qwen3MoeConfig:
+    return Qwen3MoeConfig.from_hf(hf_qwen3_moe_config)
 
 
 """
@@ -45,10 +48,10 @@ Initialize larger modules on 'meta' device for faster testing.
 """
 
 @pytest.fixture
-def hf_moe_model(hf_moe_config: HFQwen3MoeConfig, device_meta) -> HFQwen3MoeModel:
-    return HFQwen3MoeModel(hf_moe_config)
+def hf_moe_model(hf_qwen3_moe_config: HFQwen3MoeConfig, device_meta) -> HFQwen3MoeModel:
+    return HFQwen3MoeModel(hf_qwen3_moe_config)
 
 
 @pytest.fixture
-def tt_moe_model(qwen3_moe_config: Qwen3MoeConfig, device_meta):
+def qwen3_moe_model(qwen3_moe_config: Qwen3MoeConfig, device_meta):
     return Qwen3MoeModel(qwen3_moe_config)

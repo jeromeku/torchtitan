@@ -12,11 +12,23 @@ from torchtitan.models.llama3 import pipeline_llama
 from torchtitan.protocols.train_spec import register_train_spec, TrainSpec
 
 from .infra.parallelize import parallelize_qwen3
-from .model.args import Qwen3MoeConfig
+from .model.configuration import Qwen3MoeConfig
 from .model.model import Qwen3MoeModel
 from .optimizer import build_qwen3_optimizers
+from typing import Literal
+from transformers.utils.logging import disable_progress_bar
+from transformers import AutoConfig
+from functools import lru_cache
+disable_progress_bar()
+
+QWEN3_30B_A3B = "Qwen/Qwen3-30B-A3B"
+QWEN3_235B_A2B = "Qwen/Qwen3-235B-A22B"
 
 
+@lru_cache
+def download_hf_config(model_id: str):
+    return AutoConfig.from_pretrained(model_id)
+  
 qwen3_moe_configs = {
     "debug": Qwen3MoeConfig(
         num_hidden_layers=1,
@@ -28,7 +40,7 @@ qwen3_moe_configs = {
         moe_intermediate_size=768,
         router_aux_loss_coef=None
     ),
-    "30B-A30B": Qwen3MoeConfig(
+    QWEN3_30B_A3B: Qwen3MoeConfig(
         num_hidden_layers=24,
         hidden_size=2048,
         max_seq_len=32768,
@@ -37,7 +49,7 @@ qwen3_moe_configs = {
         num_attention_heads=32,
         moe_intermediate_size=768,
     ),
-    "235B-A22B": Qwen3MoeConfig(
+    QWEN3_235B_A2B: Qwen3MoeConfig(
         num_hidden_layers=94,
         hidden_size=4096,
         max_seq_len=40960,

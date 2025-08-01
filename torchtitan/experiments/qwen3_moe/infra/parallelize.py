@@ -31,7 +31,7 @@ from .parallelisms import (
     NoParallel,
     TensorParallel,
 )
-from ..model.args import Qwen3MoeConfig
+from ..model.configuration import Qwen3MoeConfig
 
 # for selective op activation checkpointing
 _save_list = {

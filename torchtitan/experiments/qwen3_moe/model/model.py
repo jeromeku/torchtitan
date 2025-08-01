@@ -11,7 +11,7 @@ from torchtitan.experiments.kernels.moe.indices import (
     generate_permute_indices,
 )
 
-from .args import Qwen3MoeConfig
+from .configuration import Qwen3MoeConfig
 from .attention import build_attention, init_attention_mask
 
 
@@ -45,7 +45,7 @@ class Qwen3MoeRMSNorm(nn.Module):
         x_normed = (x_fp32 * torch.rsqrt(x_fp32.pow(2).mean(-1, keepdim=True) + self.eps)).type_as(
             x
         )
-        return x_normed * self.scale
+        return x_normed * self.weight
 
     def reset_parameters(self):
         torch.nn.init.ones_(self.weight)
@@ -385,10 +385,6 @@ class Qwen3MoeAttention(nn.Module):
         head_dim = model_config.head_dim
         self.config = model_config
         # self.rope_embeds = rope_embeddings
-
-        assert head_dim == hidden_size // num_heads, (
-            f"head_dim does not match hidden_size // num_heads: {head_dim} != {hidden_size // num_heads}"
-        )
 
         if num_heads % num_kv_heads != 0:
             raise ValueError(

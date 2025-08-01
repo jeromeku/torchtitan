@@ -7,7 +7,7 @@ from torch import nn
 from torch.distributed.tensor import DTensor, Replicate
 from torch.nn import functional as F
 
-from .args import Qwen3MoeConfig
+from .configuration import Qwen3MoeConfig
 
 class GroupedExperts(nn.Module):
     """This class implements the grouped experts layer used in Mixture of Experts. Each expert

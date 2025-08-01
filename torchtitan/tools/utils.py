@@ -9,7 +9,8 @@ import subprocess
 import time
 from dataclasses import dataclass
 from typing import Optional
-
+from functools import lru_cache
+from transformers import AutoConfig
 import torch
 from torch._utils import _get_available_device_type, _get_device_module
 
@@ -167,3 +168,7 @@ def check_if_feature_in_pytorch(
             f"{min_nightly_version}. Please upgrade a newer version to include the "
             f"change in ({pull_request}) for correct {feature_name}."
         )
+
+@lru_cache
+def download_hf_config(model_id: str):
+    return AutoConfig.from_pretrained(model_id)
