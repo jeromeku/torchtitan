@@ -64,7 +64,7 @@ class Qwen3MoeSparseMoeBlock(nn.Module):
     def __init__(self, config: Qwen3MoeConfig):
         super().__init__()
         self.config = config
-        
+
         # Configure experts
         num_experts = config.num_experts
         hidden_dim, intermediate_dim = config.hidden_size, config.moe_intermediate_size
@@ -215,13 +215,6 @@ class Qwen3MoeSparseMoeBlock(nn.Module):
         assert router_outputs.gather_indices.shape == torch.Size([M * topk]), (
             f"{router_outputs.gather_indices.shape} != {torch.Size(M * topk)}"
         )
-
-        # tokens_per_expert will be used to update the expert bias for load balancing.
-        # Prevent extra local tokens accumulation on evaluation or activation recomputation.
-        if self.load_balance_coeff is not None and torch.is_grad_enabled():
-            with torch.no_grad():
-                self.tokens_per_expert.add_(router_outputs.num_tokens_per_expert)
-
 
         x = self.run_experts(x, router_outputs=router_outputs)
 

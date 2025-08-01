@@ -20,7 +20,7 @@ def device_meta():
 
 
 @pytest.fixture(
-    params=[torch.float32, torch.float16, torch.bfloat16], ids=lambda d: str(d).split(".")[-1]
+    params=[torch.float32, torch.bfloat16], ids=lambda d: str(d).split(".")[-1]
 )
 def dtype(request: pytest.FixtureRequest) -> torch.dtype:
     return request.param

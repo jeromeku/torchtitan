@@ -278,18 +278,12 @@ class TokenChoiceTopKRouter(nn.Module):
                 f"{self.score_fn} not recognized: options are `softmax` or `sigmoid`"
             )
 
-        if expert_bias is not None:
-            _, selected_experts = torch.topk(
-                routing_weights + expert_bias, k=self.top_k, dim=-1
-            )
-            routing_weights = routing_weights.gather(dim=-1, index=selected_experts)
-        else:
-            routing_weights, selected_experts = torch.topk(
-                routing_weights, k=self.topk, dim=-1
-            )
+        routing_weights, selected_experts = torch.topk(
+            routing_weights, k=self.topk, dim=-1
+        )
 
         if self.norm_topk_prob:
-            routing_weights /= routing_weights.sum(dim=-1, keep_dim=True).to(x.dtype)
+            routing_weights /= routing_weights.sum(dim=-1, keepdim=True).to(x.dtype)
 
         # Cast back to original dtype **after** calculating topk, should help with non-deterministic sorting 
         # due to lower precision dtypes (bf16) when testing against HF transformers

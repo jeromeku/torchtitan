@@ -114,7 +114,6 @@ def test_qwen3_experts(
     qwen3_moe_block: Qwen3MoeSparseMoeBlock,
     device: str = "cuda",
 ):
-    breakpoint()
     initialize_model(hf_moe_block, dtype=dtype, device=device)
     initialize_model(qwen3_moe_block, dtype=dtype, device=device)
 
@@ -161,7 +160,7 @@ def test_qwen3_experts(
                 getattr(hf_moe_block.experts[i], proj).weight.copy_(getattr(expert, proj).weight)
 
     # hftester_expert_out, _ = hf_moe_block.forward(x)
-    # hf_expert_out, _ = hf_moe_block.forward(x)
+    hf_expert_out, _ = hf_moe_block.forward(x)
 
     # check_tensors(
     #     hf_expert_out,
@@ -170,9 +169,9 @@ def test_qwen3_experts(
     #     atol=atol,
     #     rtol=rtol,
     # )
-    # # Run router and experts separately
-    # router_out = router(x)
-    # expert_out = qwen3_moe_block.run_experts(x.view(-1, hidden_size), router_out)
+    # Run router and experts separately
+    router_out = router(x)
+    expert_out = qwen3_moe_block.run_experts(x.view(-1, hidden_size), router_out)
 
     # check_tensors(
     #     hftester_expert_out,
@@ -191,11 +190,11 @@ def test_qwen3_experts(
     #     rtol=rtol,
     # )
 
-    # # Finally check against original HF SparseMoeBlock
-    # check_tensors(
-    #     hf_expert_out,
-    #     expert_out,
-    #     label="Expert, HFQwen3SparseMoeBlock vs Qwen3SparseMoeBlock",
-    #     atol=atol,
-    #     rtol=rtol,
-    # )
+    # Finally check against original HF SparseMoeBlock
+    check_tensors(
+        hf_expert_out,
+        expert_out,
+        label="Expert, HFQwen3SparseMoeBlock vs Qwen3SparseMoeBlock",
+        atol=atol,
+        rtol=rtol,
+    )
