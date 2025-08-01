@@ -72,11 +72,9 @@ class Qwen3MoeConfig(BaseModelArgs):
     @classmethod
     def from_hf(cls, hf_config: HFQwen3MoeConfig, **kwargs):
 
-        import ipdb; ipdb.set_trace()
-        # Sanity checks
-        assert getattr(hf_config, "head_dim", None) is not None, f"Qwen3MoeConfig should specify head_dim"
+        assert getattr(hf_config, "head_dim", None) is not None, "Qwen3MoeConfig should specify head_dim"
         head_dim = hf_config.head_dim
-        assert hf_config.norm_topk_prob, f"Qwen3Moe normalizes topk prob"
+        assert hf_config.norm_topk_prob, "Qwen3Moe normalizes topk prob"
 
         return cls(
             vocab_size=hf_config.vocab_size,

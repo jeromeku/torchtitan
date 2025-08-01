@@ -62,9 +62,6 @@ def check_rms_norm(
 
         assert ref_norm.variance_epsilon == test_norm.eps
 
-        with torch.no_grad():
-            test_norm.scale.copy_(ref_norm.weight)
-
         expected = ref_norm(x)
         actual = test_norm(x)
         check_tensors(expected, actual, key, atol=atol, rtol=rtol)
@@ -128,53 +125,53 @@ def test_qwen3_attention(
     torch.manual_seed(0)
     print(qwen3_moe_attention)
 
-    # initialize_model(
-    #     hf_attention,
-    #     dtype=dtype,
-    #     device=device,
-    #     init_fns={"Qwen3MoeRMSNorm": {"weight": torch.nn.init.ones_}}
-    # )
-    # initialize_model(
-    #     hf_rope,
-    #     dtype=dtype,
-    #     device=device,
-    # )
-    # initialize_model(
-    #     qwen3_moe_attention,
-    #     dtype=dtype,
-    #     device=device,
-    #     init_fns={"Qwen3MoeRMSNorm": {"scale": torch.nn.init.ones_}}
-    # )
+    initialize_model(
+        hf_attention,
+        dtype=dtype,
+        device=device,
+        init_fns={"Qwen3MoeRMSNorm": {"weight": torch.nn.init.ones_}}
+    )
+    initialize_model(
+        hf_rope,
+        dtype=dtype,
+        device=device,
+    )
+    # Local implementation of Qwen3MoeRMSNorm has a reset_parameters method that initializes weight to ones
+    initialize_model(
+        qwen3_moe_attention,
+        dtype=dtype,
+        device=device,
+    )
 
-    # atol, rtol = TEST_TOL[dtype]
+    atol, rtol = TEST_TOL[dtype]
 
-    # hidden_dim = hf_attention_tester.config.hidden_size
-    # head_dim = tt_attention.head_dim
-    # num_attn_heads = tt_attention.num_heads
-    # num_kv_heads = tt_attention.num_kv_heads
+    hidden_dim = hf_attention.config.hidden_size
+    head_dim = qwen3_moe_attention.head_dim
+    num_attn_heads = qwen3_moe_attention.num_heads
+    num_kv_heads = qwen3_moe_attention.num_kv_heads
 
-    # assert hf_attention_tester.head_dim == head_dim
-    # assert hf_attention_tester.config.num_attention_heads == num_attn_heads
-    # assert hf_attention_tester.config.num_key_value_heads == num_kv_heads
+    assert hf_attention.head_dim == head_dim
+    assert hf_attention.config.num_attention_heads == num_attn_heads
+    assert hf_attention.config.num_key_value_heads == num_kv_heads
 
-    # # Rms sanity check
-    # check_rms_norm(
-    #     hf_attention_tester,
-    #     tt_attention,
-    #     bs,
-    #     seqlen,
-    #     num_attn_heads,
-    #     head_dim,
-    #     dtype,
-    #     device,
-    #     atol,
-    #     rtol,
-    # )
+    # Rms sanity check
+    check_rms_norm(
+        hf_attention,
+        qwen3_moe_attention,
+        bs,
+        seqlen,
+        num_attn_heads,
+        head_dim,
+        dtype,
+        device,
+        atol,
+        rtol,
+    )
 
     # # Check attention debugging outputs: q_proj, q_proj_norm, q_rot, etc.
     # check_attention(
-    #     hf_attention_tester,
-    #     tt_attention,
+    #     hf_attention,
+    #     qwen3_moe_attention,
     #     ref_rope=hf_rope,
     #     bs=bs,
     #     seqlen=seqlen,
@@ -188,7 +185,7 @@ def test_qwen3_attention(
     # # Check against canonical HF implementation
     # check_attention(
     #     hf_attention,
-    #     tt_attention,
+    #     qwen3_moe_attention,
     #     ref_rope=hf_rope,
     #     bs=bs,
     #     seqlen=seqlen,
