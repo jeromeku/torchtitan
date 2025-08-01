@@ -36,6 +36,15 @@ def hf_rope(hf_moe_model: HFQwen3MoeModel) -> HFQwen3RoPE:
     """
     return hf_moe_model.rotary_emb
 
+
+@pytest.fixture
+def qwen3_moe_rope(qwen3_moe_model: Qwen3MoeModel) -> Qwen3MoeRotaryEmbedding:
+    """
+    RoPE: position embeddings are instantiated outside of attention and passed as a
+    parameter to attention forward in HF's attention implementation.
+    """
+    return qwen3_moe_model.rope_embeds
+
 @pytest.fixture
 def qwen3_moe_attention(qwen3_moe_model: Qwen3MoeModel) -> Qwen3MoeAttention:
     decoder_layer: Qwen3MoeDecoderLayer = qwen3_moe_model.layers[0]
@@ -71,6 +80,7 @@ def check_attention(
     ref_attn: HFQwen3MoeAttention,
     test_attn: Qwen3MoeAttention,
     ref_rope: HFQwen3RoPE,
+    test_rope: Qwen3MoeRotaryEmbedding,
     bs: int,
     seqlen: int,
     hidden_dim: int,
@@ -79,9 +89,8 @@ def check_attention(
     atol: float,
     rtol: float,
 ):
-    rope: Qwen3MoeRotaryEmbedding = test_attn.pos_embeddings
-    assert ref_rope.config.rope_theta == rope.base
-    check_tensors(ref_rope.inv_freq, rope.theta, "RoPE inv freq", atol, rtol)
+    assert ref_rope.config.rope_theta == test_rope.theta
+    check_tensors(ref_rope.inv_freq, test_rope.inv_freq, "RoPE inv freq", atol, rtol)
 
     # Copy proj weights
     with torch.no_grad():
@@ -93,22 +102,22 @@ def check_attention(
 
     # Check attention
     x = torch.randn(bs, seqlen, hidden_dim, dtype=dtype, device=device)
-    # Reference
     pos_ids = torch.arange(seqlen, device=device).unsqueeze(0)
     hf_rope_embeds = ref_rope.forward(x, position_ids=pos_ids)
+    qwen_rope_embeds = test_rope.forward(x, position_ids=pos_ids)
+
+    for freq_ref, freq_test in zip(hf_rope_embeds, qwen_rope_embeds):
+        check_tensors(freq_ref, freq_test, "Qwen3RotaryEmbedding", atol=atol, rtol=rtol)
 
     # Test
     expected_attn_out, _ = ref_attn.forward(
         x, position_embeddings=hf_rope_embeds, attention_mask=None
     )
 
-    actual_attn_out = test_attn.forward(x, y=x, debug=False)
+    actual_attn_out = test_attn.forward(x, rope_freqs=qwen_rope_embeds)
     check_tensors(
-        expected_attn_out, actual_attn_out, "HFQwen3MoeAttention output", atol=atol, rtol=rtol
+        expected_attn_out, actual_attn_out, "Qwen3MoeAttention", atol=atol, rtol=rtol
     )
-
-    # TODO: More comprehensive checking of attn implementation
-    # ref_attn._attention_implementation, test_attn._attention_call
 
 
 @pytest.mark.parametrize("seqlen", [128], ids=lambda x: f"seqlen={x}")
@@ -116,6 +125,7 @@ def check_attention(
 def test_qwen3_attention(
     hf_attention: HFQwen3MoeAttention,
     hf_rope: HFQwen3RoPE,
+    qwen3_moe_rope: Qwen3MoeRotaryEmbedding,
     qwen3_moe_attention: Qwen3MoeAttention,
     bs: int,
     seqlen: int,
@@ -133,6 +143,11 @@ def test_qwen3_attention(
     )
     initialize_model(
         hf_rope,
+        dtype=dtype,
+        device=device,
+    )
+    initialize_model(
+        qwen3_moe_rope,
         dtype=dtype,
         device=device,
     )
@@ -168,19 +183,20 @@ def test_qwen3_attention(
         rtol,
     )
 
-    # # Check attention debugging outputs: q_proj, q_proj_norm, q_rot, etc.
-    # check_attention(
-    #     hf_attention,
-    #     qwen3_moe_attention,
-    #     ref_rope=hf_rope,
-    #     bs=bs,
-    #     seqlen=seqlen,
-    #     hidden_dim=hidden_dim,
-    #     dtype=dtype,
-    #     device=device,
-    #     atol=atol,
-    #     rtol=rtol,
-    # )
+    # Check attention debugging outputs: q_proj, q_proj_norm, q_rot, etc.
+    check_attention(
+        hf_attention,
+        qwen3_moe_attention,
+        ref_rope=hf_rope,
+        test_rope=qwen3_moe_rope,
+        bs=bs,
+        seqlen=seqlen,
+        hidden_dim=hidden_dim,
+        dtype=dtype,
+        device=device,
+        atol=atol,
+        rtol=rtol,
+    )
 
     # # Check against canonical HF implementation
     # check_attention(
