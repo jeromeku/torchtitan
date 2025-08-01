@@ -159,7 +159,7 @@ def qwen3_moe_config(model_id: str, **kwargs):
 
     return config
 
-QWEN3_MOE_30B = "Qwen3/Qwen3-30B-A3B"
+QWEN3_MOE_30B = "Qwen/Qwen3-30B-A3B"
 
 Qwen3MoeConfig_30b_A3B = Qwen3MoeConfig(
     vocab_size=151936,
