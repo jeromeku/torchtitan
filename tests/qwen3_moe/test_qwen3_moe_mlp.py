@@ -102,9 +102,9 @@ def qwen3_moe_router(qwen3_moe_block: Qwen3MoeSparseMoeBlock) -> TokenChoiceTopK
 
 
 
-@pytest.mark.parametrize("use_grouped_gemm", [False, True], ids=key_value_format)
-@pytest.mark.parametrize("seqlen", [128], ids=key_value_format)
-@pytest.mark.parametrize("bs", [1], ids=key_value_format)
+@pytest.mark.parametrize("use_grouped_gemm", [False, True], ids=lambda x: f"grouped_gemm={x}")
+@pytest.mark.parametrize("seqlen", [128], ids=lambda x: f"seqlen={x}")
+@pytest.mark.parametrize("bs", [1], ids=lambda x: f"bs={x}")
 def test_qwen3_experts(
     bs: int,
     seqlen: int,
@@ -159,19 +159,11 @@ def test_qwen3_experts(
                 getattr(experts, proj)[i].data.copy_(getattr(expert, proj).weight.T.contiguous())
                 getattr(hf_moe_block.experts[i], proj).weight.copy_(getattr(expert, proj).weight)
 
-    # hftester_expert_out, _ = hf_moe_block.forward(x)
     hf_expert_out, _ = hf_moe_block.forward(x)
 
-    # check_tensors(
-    #     hf_expert_out,
-    #     hftester_expert_out,
-    #     label="Expert, hf original vs hf tester",
-    #     atol=atol,
-    #     rtol=rtol,
-    # )
-    # Run router and experts separately
-    router_out = router(x)
-    expert_out = qwen3_moe_block.run_experts(x.view(-1, hidden_size), router_out)
+    expert_out = qwen3_moe_block.forward(x)
+    # router_out = router(x)
+    # expert_out = qwen3_moe_block.run_experts(x.view(-1, hidden_size), router_out)
 
     # check_tensors(
     #     hftester_expert_out,
