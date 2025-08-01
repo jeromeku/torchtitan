@@ -63,7 +63,8 @@ class Qwen3MoeSparseMoeBlock(nn.Module):
 
     def __init__(self, config: Qwen3MoeConfig):
         super().__init__()
-
+        self.config = config
+        
         # Configure experts
         num_experts = config.num_experts
         hidden_dim, intermediate_dim = config.hidden_size, config.moe_intermediate_size
