@@ -135,30 +135,30 @@ def test_qwen3_experts(
     check_equal(moe_intermediate_size, N, "Moe intermediate dim")
     check_equal(hidden_size, K, "Moe hidden size")
 
-    # # True => _grouped_mm, False => for-loop based expert calc (reference only, way too slow to use in prod)
-    # # TODO: add custom grouped gemm
-    # if use_grouped_gemm and dtype != torch.bfloat16:
-    #     pytest.skip("_grouped_mm only supports bfloat16")
-    # experts.use_grouped_mm = use_grouped_gemm
+    # True => _grouped_mm, False => for-loop based expert calc (reference only, way too slow to use in prod)
+    # TODO: add custom grouped gemm
+    if use_grouped_gemm and dtype != torch.bfloat16:
+        pytest.skip("_grouped_mm only supports bfloat16")
+    experts.use_grouped_mm = use_grouped_gemm
 
-    # # Copy weights
-    # with torch.no_grad():
-    #     # router
-    #     router.gate.weight.copy_(hf_moe_block.gate.weight)
-    #     hf_moe_block.gate.weight.copy_(hf_moe_block.gate.weight)
+    # Copy weights
+    with torch.no_grad():
+        # router
+        router.gate.weight.copy_(hf_moe_block.gate.weight)
+        hf_moe_block.gate.weight.copy_(hf_moe_block.gate.weight)
 
-    #     # experts
-    #     for i, expert in enumerate(hf_moe_block.experts):
-    #         expert: Qwen3MoeMLP
+        # experts
+        for i, expert in enumerate(hf_moe_block.experts):
+            expert: Qwen3MoeMLP
 
-    #         for proj in ["gate_proj", "up_proj", "down_proj"]:
-    #             check_equal(
-    #                 getattr(experts, proj)[i].shape,
-    #                 getattr(expert, proj).weight.T.shape,
-    #                 f"{proj} shape",
-    #             )
-    #             getattr(experts, proj)[i].data.copy_(getattr(expert, proj).weight.T.contiguous())
-    #             getattr(hf_moe_block.experts[i], proj).weight.copy_(getattr(expert, proj).weight)
+            for proj in ["gate_proj", "up_proj", "down_proj"]:
+                check_equal(
+                    getattr(experts, proj)[i].shape,
+                    getattr(expert, proj).weight.T.shape,
+                    f"{proj} shape",
+                )
+                getattr(experts, proj)[i].data.copy_(getattr(expert, proj).weight.T.contiguous())
+                getattr(hf_moe_block.experts[i], proj).weight.copy_(getattr(expert, proj).weight)
 
     # hftester_expert_out, _ = hf_moe_block.forward(x)
     # hf_expert_out, _ = hf_moe_block.forward(x)
