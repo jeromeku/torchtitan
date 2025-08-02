@@ -273,7 +273,7 @@ class TestQwen3MoeModel:
         # self.qwen3_moe_model.output_hidden_states = out_states
         self.qwen3_moe_model: Qwen3MoeModel
         test_hidden_states, test_logits = self.qwen3_moe_model.forward(self.input_ids, output_hidden_states=True)
-
+        breakpoint()
         # final layernorm on TT side to match HF contract
         # test_hidden_states[-1] = self.qwen3_moe_model.norm(test_hidden_states[-1])
 
@@ -285,5 +285,5 @@ class TestQwen3MoeModel:
         # HF only upcasts logits if calculating loss
         if self.dtype != torch.float32:
             ref_outputs.logits = ref_outputs.logits.float()
-        
+            test_logits = test_logits.float()
         check_tensors(ref_outputs.logits, test_logits, "logits", atol=self.atol, rtol=self.rtol)
