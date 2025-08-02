@@ -268,13 +268,14 @@ class TestQwen3MoeModel:
             self.input_ids, output_hidden_states=True
         )
 
-        # TT
-        out_states = list(range(len(self.qwen3_moe_model.layers) + 1))
-        self.qwen3_moe_model.output_hidden_states = out_states
-        *test_hidden_states, test_logits = self.qwen3_moe_model(self.input_ids)
+        # Titan
+        # out_states = list(range(len(self.qwen3_moe_model.layers) + 1))
+        # self.qwen3_moe_model.output_hidden_states = out_states
+        self.qwen3_moe_model: Qwen3MoeModel
+        test_hidden_states, test_logits = self.qwen3_moe_model.forward(self.input_ids, output_hidden_states=True)
 
         # final layernorm on TT side to match HF contract
-        test_hidden_states[-1] = self.qwen3_moe_model.norm(test_hidden_states[-1])
+        # test_hidden_states[-1] = self.qwen3_moe_model.norm(test_hidden_states[-1])
 
         assert len(ref_outputs.hidden_states) == len(test_hidden_states)
 

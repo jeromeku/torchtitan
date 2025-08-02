@@ -627,7 +627,8 @@ class Qwen3MoeModel(nn.Module):
             hidden_states = []
 
         for layer in self.layers:
-            hidden_states.append(h)
+            if output_hidden_states:
+                hidden_states.append(h)
             h = layer(h, rope_freqs=rope_freqs)
 
         h = self.norm(h) if self.norm else h
@@ -636,7 +637,11 @@ class Qwen3MoeModel(nn.Module):
             hidden_states.append(h)
 
         output = self.lm_head(h) if self.lm_head else h
-        return hidden_states, output if output_hidden_states else output
+
+        if output_hidden_states:
+            return hidden_states, output
+        else:
+            output
 
     def init_weights(
         self,
