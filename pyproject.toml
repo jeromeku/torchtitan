@@ -39,10 +39,20 @@ dev = [
     "pytest-cov",
     "wandb"
 ]
+custom = [
+    "nvidia-cutlass-dsl",
+    # Install from local submodule instead of PyPI:
+    # If flashinfer’s pyproject name is "flashinfer-python", keep this as-is.
+    # If it’s "flashinfer", change the left side to match (e.g., "flashinfer @ ...").
+    # "flashinfer-python @ ./thirdparty/flashinfer"
+]
 
 [tool.setuptools.dynamic]
 version = {file = "assets/version.txt"}
 
+# If you use uv (recommended), this forces local path resolution even if a wheel exists on PyPI.
+[tool.uv.sources]
+flashinfer-python = { path = "thirdparty/flashinfer" }
 
 # ---- Explicit project build information ---- #
 [build-system]

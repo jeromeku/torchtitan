@@ -1,0 +1,6 @@
+[submodule "thirdparty/flashinfer"]
+	path = thirdparty/flashinfer
+	url = https://github.com/jeromeku/flashinfer
+[submodule "thirdparty/cutlass"]
+	path = thirdparty/cutlass
+	url = https://github.com/jeromeku/cutlass
