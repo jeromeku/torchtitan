@@ -1,0 +1,3 @@
+[submodule "thirdparty/ao"]
+	path = thirdparty/ao
+	url = https://github.com/jeromeku/ao

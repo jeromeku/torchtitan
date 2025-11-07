@@ -23,6 +23,7 @@ flavor = "debugmodel"
 # test folder with tokenizer.json, for debug purpose only
 hf_assets_path = "./tests/assets/tokenizer"
 # converters = ["float8"]
+print_after_conversion = true
 
 [optimizer]
 name = "AdamW"
@@ -61,11 +62,11 @@ export_dtype = "float32"
 async_mode = "disabled"  # ["disabled", "async", "async_with_pinned_mem"]
 
 [activation_checkpoint]
-mode = "selective"  # ["none", "selective", "full"]
+mode = "none"  # ["none", "selective", "full"]
 selective_ac_option = '2'  # 'int' = ac every positive int layer or 'op', ac based on ops policy
 
 [compile]
-enable=false
+enable=true
 components = ["model", "loss"]
 
 [quantize.linear.float8]
